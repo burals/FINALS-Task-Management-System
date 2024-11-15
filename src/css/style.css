@@ -1,0 +1,110 @@
+:root {
+    --background2-color: white;
+    --primary-color: #C4DAD2;
+    --primary-color-hover: #16423C;
+    --button-color: #0D7C66;
+    --background-color: #6A9C89;
+    --text-color: #16423C;
+    --input-border-color: #ccc;
+    --border-radius: 10px;
+    --button-radius: 5px;
+    --box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.1);
+    --font-family: Georgia, serif;
+    --font-size: 16px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: var(--text-color);
+}
+
+div {
+    background-color: var(--background2-color);
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    width: 60%;
+    max-width: 800px; 
+    height: auto;
+}
+
+h1.Title {
+    font-size: 30px;
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 80%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    font-size: var(--font-size);
+}
+
+button[type="submit"] {
+    width: 85%;
+    padding: 12px;
+    margin-top: 15px;
+    background-color: var(--button-color);
+    color: var(--background2-color);
+    border: none;
+    border-radius: var(--button-radius);
+    font-size: var(--font-size);
+}
+
+button[type="submit"]:hover {
+    background-color: var(--primary-color-hover);
+}
+
+form.form1 {
+    margin-bottom: 40px;
+}
+
+form.form2 {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    button[type="submit"] {
+        width: 100%;
+    }
+
+    div {
+        padding: 20px;
+    }
+}
