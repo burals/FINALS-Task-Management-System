@@ -1,13 +1,16 @@
 <?php
+
     include_once 'config/settings-configuration.php';
 
     // Check if login is successful by checking the URL parameter
     $login_successful = isset($_GET['status']) && $_GET['status'] == 'success';
 ?><!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Home</title>
     <link rel="stylesheet" href="src/css/style.css">
 </head>
@@ -32,3 +35,4 @@
     </div>
 </body>
 </html>
+
