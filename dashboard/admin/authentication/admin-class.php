@@ -180,7 +180,9 @@ class ADMIN
                         </div>
                         <h1>Welcome</h1>
                         <p>Hello,<strong>$email</strong></p>
+
                         <p>Welcome to Task Management CCS Faculty</p>
+
                         <p>If you did not sign up for an account, you can safely ignore this email.</p>
                         <p>Thank you!</p>
                     </div>
@@ -244,6 +246,7 @@ class ADMIN
                 echo "<script>alert('Invalid CSRF token.'); window.location.href = '../../../';</script>";
                 exit;
             }
+
     
             unset($_SESSION['csrf_token']);
     
@@ -251,15 +254,18 @@ class ADMIN
             $stmt->execute(array(":email" => $email));
             $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
     
+
             if ($stmt->rowCount() == 1 && $userRow['password'] == md5($password)) {
                 $activity = "Has Successfully signed in";
                 $user_id = $userRow['id'];
                 $this->logs($activity, $user_id);
+
     
                 $_SESSION['adminSession'] = $user_id;
     
                 // Redirect with a success flag in the URL
                 header("Location: ../?status=success");
+
                 exit;
             } else {
                 echo "<script>alert('Invalid Credentials.'); window.location.href = '../../../';</script>";
@@ -289,7 +295,9 @@ class ADMIN
         $mail->addAddress($email);
         $mail->Username = $smtp_email;
         $mail->Password = $smtp_password;
+
         $mail->setFrom($smtp_email, "DHVSU CCS Faculty TMS");
+
         $mail->Subject = $subject;
         $mail->msgHTML($message);
         $mail->Send();
