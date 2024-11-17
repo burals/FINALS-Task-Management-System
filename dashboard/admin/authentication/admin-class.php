@@ -180,7 +180,7 @@ class ADMIN
                         </div>
                         <h1>Welcome</h1>
                         <p>Hello,<strong>$email</strong></p>
-                        <p>Welcome to Ace System</p>
+                        <p>Welcome to Task Management CCS Faculty</p>
                         <p>If you did not sign up for an account, you can safely ignore this email.</p>
                         <p>Thank you!</p>
                     </div>
@@ -244,21 +244,22 @@ class ADMIN
                 echo "<script>alert('Invalid CSRF token.'); window.location.href = '../../../';</script>";
                 exit;
             }
-
+    
             unset($_SESSION['csrf_token']);
-
+    
             $stmt = $this->conn->prepare("SELECT * FROM user WHERE email = :email");
             $stmt->execute(array(":email" => $email));
             $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
             if ($stmt->rowCount() == 1 && $userRow['password'] == md5($password)) {
                 $activity = "Has Successfully signed in";
                 $user_id = $userRow['id'];
                 $this->logs($activity, $user_id);
-
+    
                 $_SESSION['adminSession'] = $user_id;
-
-                echo "<script>alert('Welcome'); window.location.href = '../';</script>";
+    
+                // Redirect with a success flag in the URL
+                header("Location: ../?status=success");
                 exit;
             } else {
                 echo "<script>alert('Invalid Credentials.'); window.location.href = '../../../';</script>";
@@ -288,7 +289,7 @@ class ADMIN
         $mail->addAddress($email);
         $mail->Username = $smtp_email;
         $mail->Password = $smtp_password;
-        $mail->setFrom($smtp_email, "Jayson");
+        $mail->setFrom($smtp_email, "DHVSU CCS Faculty TMS");
         $mail->Subject = $subject;
         $mail->msgHTML($message);
         $mail->Send();
@@ -332,7 +333,16 @@ if (isset($_POST['btn-signup'])) {
     $addAdmin->sendOtp($otp, $email);
 }
 
-   
+if (isset($_POST['btn-verify'])) {
+    $csrf_token = trim($_POST['csrf_token']);
+    $username = $_SESSION['not_verify_username'];
+    $email = $_SESSION['not_verify_email'];
+    $password = $_SESSION['not_verify_password'];
+    $tokencode = md5(uniqid(rand()));
+    $otp = trim($_POST['otp']);
+    $adminVerify = new ADMIN();
+    $adminVerify->verifyOTP($username, $email, $password, $tokencode, $otp, $csrf_token);
+}
 
 if (isset($_POST['btn-signin'])) {
     $csrf_token = trim($_POST['csrf_token']);
@@ -346,66 +356,4 @@ if (isset($_GET['admin_signout'])) {
     $adminSignout = new ADMIN();
     $adminSignout->adminSignout();
 }
-
-//
-// -- Forgot Password OTP 
-if (isset($_POST['btn-send-otp'])) {
-    $email = $_POST['email'];
-
-    // Validate the email exists in your database
-    require_once '../../../config/settings-configuration.php'; 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
-
-    if ($user) {
-        // Generate OTP and store in session
-        session_start();
-        $otp = rand(100000, 999999);
-        $_SESSION['otp'] = $otp;
-        $_SESSION['email'] = $email;
-
-        // Send OTP via email
-        mail($email, "OTP for Password Reset", "Your OTP is: $otp", "From: sender@example.com");
-        echo "OTP sent to your email.";
-    } else {
-        echo "Email not found.";
-    }
-}
-//
-// -- Verify OTP
-if (isset($_POST['btn-verify-otp'])) {
-    session_start();
-    $enteredOtp = $_POST['otp'];
-
-    // Check if the entered OTP matches the session OTP
-    if ($enteredOtp == $_SESSION['otp']) {
-        echo "OTP verified. You can now reset your password.";
-    } else {
-        echo "Invalid OTP.";
-    }
-}
-
-
-//
-// -- Here is Reset Password 
-if (isset($_POST['btn-reset-password'])) {
-    session_start();
-    $newPassword = $_POST['new_password'];
-    $confirmPassword = $_POST['confirm_password'];
-
-    if ($newPassword === $confirmPassword) {
-        // Hash the new password and update it in the database
-        require_once '../config.php';
-        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
-        $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
-        $stmt->execute([$hashedPassword, $_SESSION['email']]);
-
-        echo "Password reset successful.";
-        session_destroy();
-    } else {
-        echo "Passwords do not match.";
-    }
-}
-
 ?>

@@ -288,7 +288,7 @@ class ADMIN
         $mail->addAddress($email);
         $mail->Username = $smtp_email;
         $mail->Password = $smtp_password;
-        $mail->setFrom($smtp_email, "Jayson");
+        $mail->setFrom($smtp_email, "DHVSU CCS Task Manager");
         $mail->Subject = $subject;
         $mail->msgHTML($message);
         $mail->Send();
