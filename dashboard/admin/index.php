@@ -58,7 +58,7 @@
 
     <h1 class="WC">WELCOME <br>
         <div class="user_n">
-            <?php echo $user_data['username']; ?> 
+            <?php echo $user_data['username']; ?>
         </div>
     </h1>
 
@@ -66,7 +66,6 @@
     <div class="overlay" id="overlay"></div>
     <div class="popup" id="popup">
         <h2>Welcome!</h2>
-        <?php  echo $user_data['email']; ?>
         <p>Logged in successfully</p>
         <button onclick="closePopup()">Close</button>
     </div>
