@@ -6,6 +6,7 @@ include_once 'config/settings-configuration.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="src/css/reset.css">
     <title>Reset Password</title>
 </head>
 <body>
