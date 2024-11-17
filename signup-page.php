@@ -1,5 +1,6 @@
 <?php
     include_once 'config/settings-configuration.php';
+   
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +18,7 @@
         <div class="form-container">
             <form action="dashboard/admin/authentication/admin-class.php" method="POST">
                 <h1 class="Tittle">SIGN UP</h1>
-                <input type="hidden" name="csrf_token" value="<?php echo $csrf_token ?>">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <input type="text" name="username" placeholder="Enter Username" required> <br>
                 <input type="email" name="email" placeholder="Enter Email" required> <br>
                 <input type="password" name="password" placeholder="Enter Password" required> <br>
@@ -28,3 +29,6 @@
     </div>
 </body>
 </html>
+
+
+

@@ -4,7 +4,6 @@
     $admin = new ADMIN();
     if(!$admin->isUserLoggedIn())
     {
-
         $admin->redirect('../../');
     }
 
@@ -15,7 +14,6 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,13 +54,11 @@
 </head>
 <body>
 
-
     <button class="signout"><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></button>
 
     <h1 class="WC">WELCOME <br>
         <div class="user_n">
-
-            <?php echo $user_data['username']; ?> 
+            <?php echo $user_data['fullname']; ?>
         </div>
     </h1>
 
@@ -87,7 +83,6 @@
             document.getElementById('popup').style.display = 'none';
         }
     </script>
-
 
 </body>
 </html>
