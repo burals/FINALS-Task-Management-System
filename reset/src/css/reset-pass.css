@@ -1,0 +1,58 @@
+body {
+    background: linear-gradient(110deg, transparent, rgba(105, 177, 221, 0.7), rgba(105, 177, 221, 0.8)), url('/src/css/img/dhvsu.png'), no-repeat center center;
+    background-size: cover;
+    height: 100vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #ffffff;
+    font-size: 3em;
+    position: relative;
+    bottom: 10px;
+}
+
+.form-container {
+    background-color: rgba(0, 0, 0, 0.7); /* Transparent background for the form */
+    max-width: 500px;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8);
+    width: 100%;
+    text-align: center;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: calc(95% - 10px);
+    padding: 13px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+button {
+    margin-top: 20px;
+    background-color: #4caf99;
+    color: rgb(255, 255, 255);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 50%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    
+    background-color: #4591a0;
+}
