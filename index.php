@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body class="image">
-
+<div class="wrapper">
+        <div class="logo"></div> <!-- Add the logo above the form -->
     <div class="form-container">
         <form action="dashboard/admin/authentication/admin-class.php" method="POST">
             <h1 class="Tittle">SIGN IN</h1>

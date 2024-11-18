@@ -26,23 +26,23 @@
         <title>Reset Password</title>
         <link rel="stylesheet" href="src/css/reset-password.css">
     </head>
-    <body>
-        <div class = "con">
-        <div class="container">
-            <h2>Reset Password</h2>
-            <form method="POST" action="dashboard/admin/authentication/admin-class.php">
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
-                <br>
-                <label for="new_password">Enter your new password:</label>
-                <input type="password" name="new_password" required>
-                <br>
-                <label for="confirm_new_password">Confirm your new password:</label>
-                <input type="password" id="confirm_new_password" name="confirm_new_password" required>
-                <br>
-                <button type="submit" name="btn-reset-password">Reset Password</button>
-            </form>
-            </div>
+    <body class="image">
+    <div class = "con">
+    <div class="container">
+        <h2> Reset Password</h2>
+        <form method="POST" action="dashboard/admin/authentication/admin-class.php">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
+            <br>
+            <label class="pass" for="new_password">Password</label>
+            <input type="password" class="pass1" name="new_password" placeholder="Enter your new password" required>
+            <br>
+           
+            <input type="password" class="pass2" id="confirm_new_password" name="confirm_new_password" placeholder="Confirm Password" required>
+            <br>
+            <button type="submit" name="btn-reset-password">Reset Password</button>
+        </form>
         </div>
-    </body>
+    </div>
+</body>
     </html>
