@@ -2,8 +2,7 @@
     require_once 'authentication/admin-class.php';
 
     $admin = new ADMIN();
-    if(!$admin->isUserLoggedIn())
-    {
+    if (!$admin->isUserLoggedIn()) {
         $admin->redirect('../../');
     }
 
@@ -17,50 +16,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN DASHBOARD</title>
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../../src/css/index.css">
-    <link rel = "stylesheet" href="../../src/css/popup.css">
-
-    <style>
-        /* Styling the popup */
-        .popup {
-            display: none; /* Initially hidden */
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #f9f9f9;
-            border: 2px solid #ccc;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            z-index: 1000;
-        }
-
-        /* Background overlay */
-        .overlay {
-            display: none; /* Initially hidden */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        /* Add your own styling for the sign out button and user section */
-    </style>
+    <link rel="stylesheet" href="../../src/css/popup.css">
 </head>
 <body>
+<nav class="navbar">
+    <!-- Left Side -->
+    <div class="left">
+        <a href="settings.php" class="settings">Settings</a>
+    </div>
 
-    <button class="signout"><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></button>
+    <!-- Right Side -->
+    <ul>
+        <li><a href="authentication/admin-class.php?admin_signout" class="signout">Sign Out</a></li>
+    </ul>
+</nav>
 
-    <h1 class="WC">WELCOME <br>
-        <div class="user_n">
-            <?php echo $user_data['fullname']; ?>
-        </div>
-    </h1>
+
+    <div class="container">
+        <h1 class="WC">WELCOME</h1>
+    </div>
 
     <!-- Overlay and Popup elements -->
     <div class="overlay" id="overlay"></div>
@@ -72,7 +48,7 @@
 
     <script>
         // Display the popup when the page loads
-        window.onload = function() {
+        window.onload = function () {
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('popup').style.display = 'block';
         }
@@ -83,6 +59,5 @@
             document.getElementById('popup').style.display = 'none';
         }
     </script>
-
 </body>
 </html>

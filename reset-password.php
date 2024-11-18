@@ -1,5 +1,4 @@
     <?php
-    // reset-password.php
 
     // Start session
     session_start();

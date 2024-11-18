@@ -307,7 +307,7 @@
     
             public function redirect()
             {
-                echo "<script>alert('Admin must loggin first'); window.location.href = '../../../index.php';</script>";
+                echo "<script>alert('Admin must login first'); window.location.href = '../../../index.php';</script>";
                 exit;
             }
 
