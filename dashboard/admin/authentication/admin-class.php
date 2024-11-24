@@ -317,7 +317,7 @@
                 return $stmt;
 
             }
-
+           
             public function forgotPassword($email, $csrf_token){
                     // CSRF Token Validation
                 if (!isset($csrf_token) || !hash_equals($_SESSION['csrf_token'], $csrf_token)) {
@@ -464,14 +464,12 @@
             
         }   
         if(isset($_POST['btn-signup'])){
-
             $_SESSION['not_verify_fullname'] = trim($_POST['fullname']);
             $_SESSION['not_verify_email'] = trim($_POST['email']);
             $_SESSION['not_verify_password'] = trim($_POST['password']);
 
             $email = trim($_POST['email']);
             $otp = rand(100000, 999999);
-
             $addAdmin = new ADMIN();
             $addAdmin-> sendOtp($otp, $email);
         }
