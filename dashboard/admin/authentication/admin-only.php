@@ -180,9 +180,7 @@ class ADMIN
                         </div>
                         <h1>Welcome</h1>
                         <p>Hello,<strong>$email</strong></p>
-
-                        <p>Welcome to Task Management CCS Faculty</p>
-
+                        <p>Welcome to Ace System</p>
                         <p>If you did not sign up for an account, you can safely ignore this email.</p>
                         <p>Thank you!</p>
                     </div>
@@ -247,25 +245,20 @@ class ADMIN
                 exit;
             }
 
-    
             unset($_SESSION['csrf_token']);
-    
+
             $stmt = $this->conn->prepare("SELECT * FROM user WHERE email = :email");
             $stmt->execute(array(":email" => $email));
             $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
-    
 
             if ($stmt->rowCount() == 1 && $userRow['password'] == md5($password)) {
                 $activity = "Has Successfully signed in";
                 $user_id = $userRow['id'];
                 $this->logs($activity, $user_id);
 
-    
                 $_SESSION['adminSession'] = $user_id;
-    
-                // Redirect with a success flag in the URL
-                header("Location: ../?status=success");
 
+                echo "<script>alert('Welcome'); window.location.href = '../';</script>";
                 exit;
             } else {
                 echo "<script>alert('Invalid Credentials.'); window.location.href = '../../../';</script>";
@@ -295,9 +288,7 @@ class ADMIN
         $mail->addAddress($email);
         $mail->Username = $smtp_email;
         $mail->Password = $smtp_password;
-
-        $mail->setFrom($smtp_email, "DHVSU CCS Faculty TMS");
-
+        $mail->setFrom($smtp_email, "DHVSU CCS Task Manager");
         $mail->Subject = $subject;
         $mail->msgHTML($message);
         $mail->Send();
@@ -341,16 +332,7 @@ if (isset($_POST['btn-signup'])) {
     $addAdmin->sendOtp($otp, $email);
 }
 
-if (isset($_POST['btn-verify'])) {
-    $csrf_token = trim($_POST['csrf_token']);
-    $username = $_SESSION['not_verify_username'];
-    $email = $_SESSION['not_verify_email'];
-    $password = $_SESSION['not_verify_password'];
-    $tokencode = md5(uniqid(rand()));
-    $otp = trim($_POST['otp']);
-    $adminVerify = new ADMIN();
-    $adminVerify->verifyOTP($username, $email, $password, $tokencode, $otp, $csrf_token);
-}
+   
 
 if (isset($_POST['btn-signin'])) {
     $csrf_token = trim($_POST['csrf_token']);
@@ -364,4 +346,112 @@ if (isset($_GET['admin_signout'])) {
     $adminSignout = new ADMIN();
     $adminSignout->adminSignout();
 }
+
+//
+// -- Forgot Password OTP 
+if (isset($_POST['btn-forgot-password'])) {
+    $csrf_token = trim($_POST['csrf_token']);
+    $email = trim($_POST['email']);
+
+    if (!isset($csrf_token) || !hash_equals($_SESSION['csrf_token'], $csrf_token)) {
+        echo "<script>alert('Invalid CSRF token.'); window.location.href = '../../../forgot-password.php';</script>";
+        exit;
+    }
+
+    $otp = rand(100000, 999999);
+    $_SESSION['reset_email'] = $email;
+    $_SESSION['OTP'] = $otp;
+
+    $adminForgotPassword = new ADMIN();
+    $adminForgotPassword->sendOtp($otp, $email);
+
+    echo "<script>alert('We sent an OTP to $email.'); window.location.href = '../../../reset-password.php';</script>";
+    exit;
+}
+
+//
+// -- Here is Reset Password 
+if (isset($_POST['btn-reset-password'])) {
+    $csrf_token = trim($_POST['csrf_token']);
+    $otp = trim($_POST['otp']);
+    $new_password = trim($_POST['new_password']);
+    $email = $_SESSION['reset_email'];
+
+    if ($otp == $_SESSION['OTP']) {
+        unset($_SESSION['OTP']);
+        unset($_SESSION['reset_email']);
+
+        $hash_password = md5($new_password);
+        $adminResetPassword = new ADMIN();
+        $stmt = $adminResetPassword->runQuery("UPDATE user SET password = :password WHERE email = :email");
+        $exec = $stmt->execute(array(":password" => $hash_password, ":email" => $email));
+
+        if ($exec) {
+            echo "<script>alert('Password reset successfully.'); window.location.href = '../../../';</script>";
+        } else {
+            echo "<script>alert('Error resetting password.'); window.location.href = '../../../reset-password.php';</script>";
+        }
+    } else {
+        echo "<script>alert('Invalid OTP.'); window.location.href = '../../../reset-password.php';</script>";
+    }
+}
+
+// THIS IS SENDING OTP AREA
+// FOR FORGOT PASSWORD
+if (isset($_POST['btn-send-otp'])) {
+    $email = $_POST['email'];
+
+    // Check if email exists in the database
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+
+    if ($user) {
+        // Generate OTP and store it in the session
+        session_start();
+        $otp = rand(100000, 999999);
+        $_SESSION['otp'] = $otp;
+        $_SESSION['email'] = $email;
+
+        // Send OTP to the user's email
+        mail($email, "Your OTP Code", "Your OTP is: $otp", "From: $senderEmail");
+
+        echo "OTP sent to your email.";
+    } else {
+        echo "Email not found.";
+    }
+}
+//-----------------
+if (isset($_POST['btn-verify-otp'])) {
+    session_start();
+    $enteredOtp = $_POST['otp'];
+
+    // Check OTP validity
+    if ($enteredOtp == $_SESSION['otp']) {
+        echo "OTP verified. You can now reset your password.";
+        // Move user to the password reset step
+    } else {
+        echo "Invalid OTP.";
+    }
+}
+//---------------------
+if (isset($_POST['btn-reset-password'])) {
+    session_start();
+    $newPassword = $_POST['new_password'];
+    $confirmPassword = $_POST['confirm_password'];
+
+    if ($newPassword === $confirmPassword) {
+        // Update the password in the database
+        require_once '../config.php';
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
+        $stmt->execute([$hashedPassword, $_SESSION['email']]);
+
+        echo "Password reset successful.";
+        session_destroy();
+    } else {
+        echo "Passwords do not match.";
+    }
+}
+
 ?>
