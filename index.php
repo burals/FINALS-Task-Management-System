@@ -1,46 +1,50 @@
 <?php
-    include_once 'config/settings-configuration.php';
+include_once 'config/settings-configuration.php';
+
+$login_successful = isset($_GET['status']) && $_GET['status'] == 'success';
+$login_error = isset($_GET['status']) && $_GET['status'] == 'error';
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="src/css/login.css">
-
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-    <script src="src/js/script.js"></script>
+    <title>Home</title>
+    <link rel="stylesheet" href="src/css/style.css">
 </head>
-<body>
-   <div class="parent">
-    <div id="login" class="wrapper active"> 
-      <h1>Login</h1> <br>
-      <form action="dashboard/admin/authentication/admin-class.php" method="POST">
-          <input type="hidden" name="csrf_token" value="<?php echo $csrf_token?>">
-          <input type="email" name="email" placeholder="Enter Email" class="curve" required><br>
-          <input type="password" name="password" placeholder="Enter Password" class="curve" required><br>
-          <p class="recover">
-            <a href="forgot-password.php">Forgot Password?</a>
-          <button type="submit" name="btn-signin">Sign in</button>
-      </form>
-    </div>
-
-   <div class="parent">
-    <div class="container">
-        <div class="register">
-            <h1>Sign up</h1> <br>
-            <form action="dashboard/admin/authentication/admin-class.php" method ="POST">
+<body class="image">
+    <div class="wrapper">
+        <div class="logo"></div> <!-- Add the logo above the form -->
+        <div class="form-container">
+            <form action="dashboard/admin/authentication/admin-class.php" method="POST">
+                <h1 class="Tittle">SIGN IN</h1>
+                
+                <!-- CSRF token (for security) -->
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <input type="text" name="fullname" placeholder="Enter Fullname" required><br>
-                <input type="email" name="email" placeholder="Enter Email" required> <br>
-                <input type="password" name="password" placeholder="Enter Password" required> <br>
-                <button type="submit" name="btn-signup">Sign up</button>
+                
+                <input type="email" name="email" placeholder="Enter Email" required> <br><br>
+                <input type="password" name="password" placeholder="Enter Password" required> <br><br>
+
+                <!-- Reset Password Link -->
+                <div class="reset-container">
+                    <a href="forgot-password.php" class="reset">Reset password</a>
+                </div>
+
+                <!-- Error or Success message -->
+                <?php if ($login_error): ?>
+                    <div class="error-message">Invalid email or password.</div>
+                <?php endif; ?>
+
+                <?php if ($login_successful): ?>
+                    <div class="success-message">You are successfully logged in!</div>
+                <?php endif; ?>
+
+                <button type="submit" name="btn-signin">SIGN IN</button> <br>
+                <a href="signup-page.php" class="signup-link">Don't have an account?</a>
             </form>
         </div>
     </div>
-    </div>
-   </div>
-
 </body>
 </html>

@@ -13,8 +13,7 @@
             private $smtp_email;
             private $smtp_password;
 
-            public function __construct()
-            {
+            public function __construct() {
                 $this->settings = new SystemConfig();
                 $this->smtp_email = $this->settings->getSmtpEmail();
                 $this->smtp_password = $this->settings->getSmtpPassword();
@@ -22,6 +21,7 @@
                 $database = new Database();
                 $this->conn = $database->dbConnection();
             }
+
 
             public function sendOtp($otp, $email){
                 if($email == NULL){
@@ -35,6 +35,11 @@
                     if($stmt->rowCount() > 0){
                         echo "<script>alert('Email is already taken. Please try another one.'); window.location.href = '../../../';</script>";
                         exit;
+                        if ($user && password_verify($password, $user['password'])) {
+                            $_SESSION['adminSession'] = $user['id'];  // Store user ID in session
+                            $_SESSION['role'] = $user['role'];        // Store user role (admin/user)
+                            return true;
+                        }
                     }else{
                         $_SESSION['OTP'] = $otp;
 
@@ -85,18 +90,12 @@
                                 margin-top: 20px;
                             }
 
-                            .logo{
-                                display: block;
-                                text-align: center;
-                                margin-bottom: 30px;
-                            }
+                           
                         </style>
                     </head>
                     <body>
                         <div class='container'>
-                            <div class='logo'>
-                                <img src='cid:logo' alt='Logo' width='150'>
-                            </div>
+                
                             <h1>OTP Verification</h1>
                             <p>Hello, $email</p>
                             <p>Your OTP is, $otp</p>
@@ -110,9 +109,12 @@
                         $this->send_email($email, $message, $subject, $this->smtp_email, $this->smtp_password);
                         echo "<script>alert('We sent the OTP to $email'); window.location.href = '../../../verify-otp.php';</script>";
 
+                    
                     }
                 }
             }
+
+            
 
             public function verifyOTP($fullname, $email, $password, $tokencode, $otp, $csrf_token) {
                 if($otp == $_SESSION['OTP']){
@@ -177,11 +179,11 @@
                 <body>
                     <div class='container'>
                         <div class='logo'>
-                            <img src='cid:logo' alt='Logo' width='150'>
+                            <img src='../../src/css/img/CCS-LOGO.png' alt='Logo' width='150'>
                         </div>
                         <h1>Welcome</h1>
                         <p>Hello, <strong>$email</strong></p>
-                        <p>Welcome to Group1 System</p>
+                        <p>Welcome to DHVSU CCS Task Management System</p>
                         <p>If you didn't sign up for an account, you can please ignore this email.</p>
                         <p>Thank you!</p>
                     </div>
@@ -232,47 +234,35 @@
                 ));
 
             }
-
-            public function adminSignin($email, $password, $csrf_token)
-        {
-            try{
-                if(!isset($csrf_token) || !hash_equals($_SESSION['csrf_token'], $csrf_token)){
-                    echo "<script>alert('Invalid CSRF token.'); window.location.href = '../../../index.php'; </script>";
-                    exit;
-                }
-                unset($_SESSION['csrf_token']);
-
-                $stmt = $this->runQuery("SELECT * FROM user WHERE email = :email AND status = :status");
-                $stmt->execute(array(":email" => $email, ":status" => "active"));
-                $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if($stmt->rowCount() == 1){
-                    if($userRow['status']  == "active"){
-                        if($userRow['password'] == md5($password)){
-                            $activity = "Has succesfully signed in.";
-                            $user_id = $userRow['id'];
-                            $this->logs($activity, $user_id);
-
-                            $_SESSION['adminSession'] = $user_id;
-                            echo "<script>alert('Welcome'); window.location.href = '../index.php'; </script>";
-                            exit;
-                        }else{
-                            echo "<script>alert('Password is incorrect.'); window.location.href = '../../../index.php'; </script>";
-                            exit;
-                        }
-                    }else{
-                        echo "<script>alert('Entered Email is not verify.'); window.location.href = '../../../index.php'; </script>";
-                        exit;
-                    }
-                }else{
-                    echo "<script>alert('No Account Found.'); window.location.href = '../../../index.php'; </script>";
+            public function adminSignin($email, $password, $csrf_token) {
+                if (!isset($csrf_token) || !hash_equals($_SESSION['csrf_token'], $csrf_token)) {
+                    echo "<script>alert('Invalid CSRF token.'); window.location.href = '../../../index.php';</script>";
                     exit;
                 }
             
-            }catch(PDOException $ex){
-                echo $ex->getMessage();
+                unset($_SESSION['csrf_token']);
+            
+                $stmt = $this->runQuery("SELECT * FROM user WHERE email = :email AND status = :status");
+                $stmt->execute(array(":email" => $email, ":status" => "active"));
+                $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+                if ($stmt->rowCount() == 1 && $userRow['status'] == "active" && $userRow['password'] == md5($password)) {
+                    // Store user info in session
+                    $_SESSION['adminSession'] = $userRow['id'];
+                    $_SESSION['userRole'] = $userRow['role']; // Save user role
+            
+                    // Redirect based on user role
+                    if ($userRow['role'] == 'admin') {
+                        echo "<script>window.location.href = '../index.php';</script>"; // Admin Dashboard
+                    } else {
+                        echo "<script>window.location.href = '../user-dashboard.php';</script>"; // User Dashboard
+                    }
+                } else {
+                    echo "<script>alert('Invalid Email or Password'); window.location.href = '../../../index.php';</script>";
+                    exit;
+                }
             }
-        }
+            
             public function adminSignout()
             {
                 unset($_SESSION['adminSession']);
@@ -323,7 +313,7 @@
                 return $stmt;
 
             }
-
+           
             public function forgotPassword($email, $csrf_token){
                     // CSRF Token Validation
                 if (!isset($csrf_token) || !hash_equals($_SESSION['csrf_token'], $csrf_token)) {
@@ -469,7 +459,6 @@
         }
             
         }   
-
         if(isset($_POST['btn-signup'])){
             $_SESSION['not_verify_fullname'] = trim($_POST['fullname']);
             $_SESSION['not_verify_email'] = trim($_POST['email']);
@@ -477,7 +466,6 @@
 
             $email = trim($_POST['email']);
             $otp = rand(100000, 999999);
-
             $addAdmin = new ADMIN();
             $addAdmin-> sendOtp($otp, $email);
         }
@@ -502,7 +490,8 @@
             $password = trim($_POST['password']);
 
             $admindSignin = new ADMIN();
-            $admindSignin->adminSignin($email, $password, $csrf_token);
+            $admindSignin->adminSignin($email, $password, $csrf_token,$role);
+
         }
 
         if(isset($_GET['admin_signout'])){
@@ -535,4 +524,6 @@
             $adminReset = new ADMIN();
             $adminReset->resetPassword($token, $new_password, $csrf_token);
         }
-        
+
+
+    

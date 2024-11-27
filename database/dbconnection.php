@@ -8,9 +8,8 @@ class Database
     private $password;
     public $conn;
 
-    public function __construct()
-    {
-        if ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['SERVER_ADDR'] === '127.0.0.1' || $_SERVER['SERVER_ADDR'] === '192.168.1.72' ) {
+    public function __construct() {
+        if ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['SERVER_ADDR'] === '127.0.0.1' || $_SERVER['SERVER_ADDR'] === '192.168.1.72') {
             $this->host = "localhost";
             $this->db_name = "itelec3";
             $this->username = "root";
@@ -21,20 +20,23 @@ class Database
             $this->username = "";
             $this->password = "";
         }
-        
     }
-    public function dbConnection()
-    {
+
+    public function dbConnection() {
         $this->conn = null;
         try {
             $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        }   catch (PDOException $exception)
-        {
-            echo "Connection error:" . $exception->getMessage();
+        } catch (PDOException $exception) {
+            echo "Connection error: " . $exception->getMessage();
         }
         return $this->conn;
     }
 }
 
+// Create an instance of Database
+$dbInstance = new Database();
+
+// Call dbConnection through the instance
+$db = $dbInstance->dbConnection();
 ?>
