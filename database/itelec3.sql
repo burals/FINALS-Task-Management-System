@@ -21,6 +21,13 @@ SET time_zone = "+00:00";
 -- Database: `itelec3`
 --
 
+--require __DIR__.'/autoload copy.php';
+--$smtp_email = 'wrenchnerbangit@gmail.com';
+--$smtp_password = 'zapq uiqd mdjn axss'; 
+--require_once '../../src/vendor/phpmailer/phpmailer/src/PHPMailer.php';
+--require_once '../../src/vendor/phpmailer/phpmailer/src/SMTP.php';
+--require_once '../../src/vendor/phpmailer/phpmailer/src/Exception.php';
+
 -- --------------------------------------------------------
 
 --

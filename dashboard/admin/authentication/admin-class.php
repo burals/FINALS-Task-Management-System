@@ -285,7 +285,7 @@
                 $mail->addAddress($email);
                 $mail->Username = $smtp_email;
                 $mail->Password = $smtp_password;
-                $mail->setFrom($smtp_email, "Task Management(Group)");
+                $mail->setFrom($smtp_email, "CSS Task Management");
                 $mail->Subject = $subject;
                 $mail->msgHTML($message);
                 $mail->Send();

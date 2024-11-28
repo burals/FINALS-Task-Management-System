@@ -61,9 +61,11 @@
                 <textarea id="description" name="description" placeholder="Enter task description" required></textarea>
             </div>
             <div class="form-group">
-                <label for="due_date">Due Date</label>
-                <input type="date" id="due_date" name="due_date" required>
-            </div>
+    <label for="due_date">Due Date</label>
+    <input type="date" id="due_date" name="due_date" required>
+    <label for="due_time">Time</label>
+    <input type="time" id="due_time" name="due_time" required>
+</div>
             <div class="form-group">
                 <label for="assign_employee">Assign to Employees</label>
                 <div id="assign_employee" class="checkbox-group">
@@ -116,12 +118,6 @@
     </div>
 </div>
 
-<!-- Popup and Overlay -->
-<div id="overlay" class="overlay"></div>
-<div id="popup" class="popup">
-    <p>Popup Content Here</p>
-    <button onclick="closePopup()">Close</button>
-</div>
 
 <script>
     // Popup functionality
@@ -130,6 +126,27 @@
         document.getElementById('popup').style.display = 'none';
     }
 </script>
+ <!-- Overlay and Popup elements -->
+ <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <h2>Welcome!</h2>
+        <p>Logged in successfully</p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <script>
+        // Display the popup when the page loads
+        window.onload = function () {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        // Function to close the popup
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
 
 <div class="feedback">
     <?php if (isset($_GET['success'])): ?>
