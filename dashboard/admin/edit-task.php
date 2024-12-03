@@ -97,39 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../../src/css/edit.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Edit Task</h2>
-        <form method="POST" action="">
-            <label for="title">Task Title</label>
-            <input type="text" id="title" name="title" value="<?= htmlspecialchars($task['title']) ?>" required>
-
-            <label for="description">Description</label>
-            <textarea id="description" name="description" required><?= htmlspecialchars($task['description']) ?></textarea>
-
-            <label for="due_date">Due Date</label>
-            <input type="date" id="due_date" name="due_date" value="<?= date('Y-m-d', strtotime($task['due_date'])) ?>" required>
-
-            <label for="due_time">Due Time</label>
-            <input type="time" id="due_time" name="due_time" value="<?= date('H:i', strtotime($task['due_date'])) ?>" required>
-
-            <label for="status">Status</label>
-            <select id="status" name="status">
-                <option value="Pending" <?= $task['status'] === 'Pending' ? 'selected' : '' ?>>Pending</option>
-                <option value="In Progress" <?= $task['status'] === 'In Progress' ? 'selected' : '' ?>>In Progress</option>
-                <option value="Completed" <?= $task['status'] === 'Completed' ? 'selected' : '' ?>>Completed</option>
-            </select>
-
-            <label for="assigned_employee">Assign Employees</label>
-            <select id="assigned_employee" name="assigned_employee[]" multiple>
-                <?php foreach ($employees as $employee): ?>
-                    <option value="<?= $employee['id'] ?>" <?= in_array($employee, $currentAssignedEmployees) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($employee['fullname']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-
-            <button type="submit">Update Task</button>
-        </form>
-    </div>
+   
 </body>
 </html>
