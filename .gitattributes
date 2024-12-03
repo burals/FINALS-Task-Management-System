@@ -1,16 +1,2 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-
-# Ensure .sh (shell scripts) always use LF (Linux/Mac-friendly)
-*.sh text eol=lf
-
-# Ensure .bat (batch scripts) always use CRLF (Windows-friendly)
-*.bat text eol=crlf
-
-# Optional: Always treat Markdown files as text
-*.md text
-
-# Optional: Binary files (no line-ending normalization)
-*.png binary
-*.jpg binary
-*.pdf binary
