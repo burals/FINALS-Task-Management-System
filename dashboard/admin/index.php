@@ -34,7 +34,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../../src/css/index.css">
-    <link rel="stylesheet" href="../../src/css/popup.css">
+    
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -119,34 +119,6 @@
 </div>
 
 
-<script>
-    // Popup functionality
-    function closePopup() {
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('popup').style.display = 'none';
-    }
-</script>
- <!-- Overlay and Popup elements -->
- <div class="overlay" id="overlay"></div>
-    <div class="popup" id="popup">
-        <h2>Welcome!</h2>
-        <p>Logged in successfully</p>
-        <button onclick="closePopup()">Close</button>
-    </div>
-
-    <script>
-        // Display the popup when the page loads
-        window.onload = function () {
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('popup').style.display = 'block';
-        }
-
-        // Function to close the popup
-        function closePopup() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('popup').style.display = 'none';
-        }
-    </script>
 
 <div class="feedback">
     <?php if (isset($_GET['success'])): ?>
