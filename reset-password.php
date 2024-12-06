@@ -40,10 +40,7 @@ $token = $_GET['token'];
         <input type="password" class="pass2" id="confirm_new_password" name="confirm_new_password" placeholder="Confirm Password" required>
         <br>
         <button type="submit" name="btn-reset-password">Reset Password</button>
-      
     </form>
-    <a href="index.php">Back to home</a>
-
     </div>
 </div>
 </body>

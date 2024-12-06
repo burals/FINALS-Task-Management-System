@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 27, 2024 at 01:33 AM
+-- Host: 127.0.0.1:3306
+-- Generation Time: Dec 03, 2024 at 08:35 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -56,22 +56,6 @@ CREATE TABLE `logs` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `logs`
---
-
-INSERT INTO `logs` (`id`, `user_id`, `activity`, `created_at`) VALUES
-(119, 51, 'Has succesfully signed in.', '2024-11-24 10:49:44'),
-(120, 51, 'Has succesfully signed in.', '2024-11-24 11:31:33'),
-(121, 52, 'Has succesfully signed in.', '2024-11-24 12:21:45'),
-(122, 51, 'Has succesfully signed in.', '2024-11-24 12:21:57'),
-(123, 51, 'Has succesfully signed in.', '2024-11-24 16:34:23'),
-(124, 51, 'Has succesfully signed in.', '2024-11-24 16:37:43'),
-(125, 53, 'Has succesfully signed in.', '2024-11-24 18:36:22'),
-(126, 51, 'Has succesfully signed in.', '2024-11-25 13:41:58'),
-(127, 51, 'Has succesfully signed in.', '2024-11-25 14:05:34'),
-(128, 55, 'Has succesfully signed in.', '2024-11-27 00:31:45');
-
 -- --------------------------------------------------------
 
 --
@@ -82,7 +66,7 @@ CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `due_date` date NOT NULL,
+  `due_date` datetime NOT NULL,
   `assigned_employee` int(11) DEFAULT NULL,
   `status` enum('pending','in progress','completed') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -94,7 +78,7 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`id`, `title`, `description`, `due_date`, `assigned_employee`, `status`, `created_at`, `updated_at`) VALUES
-(18, '1', '2', '2024-12-12', NULL, 'in progress', '2024-11-24 18:51:19', '2024-11-24 18:52:41');
+(35, 'lol', '123', '2024-12-03 16:53:00', NULL, 'pending', '2024-12-03 06:53:16', '2024-12-03 07:19:34');
 
 -- --------------------------------------------------------
 
@@ -113,8 +97,7 @@ CREATE TABLE `task_assignments` (
 --
 
 INSERT INTO `task_assignments` (`id`, `task_id`, `employee_id`) VALUES
-(20, 18, 51),
-(21, 18, 52);
+(85, 35, 51);
 
 -- --------------------------------------------------------
 
@@ -139,10 +122,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `fullname`, `email`, `password`, `reset_token`, `token_expiry`, `status`, `tokencode`, `created_at`) VALUES
-(51, 'DEAN Seth', 'sthlgns@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-24 10:49:30'),
+(51, 'DEAN Seth', 'sthlgns@gmail.com', '202cb962ac59075b964b07152d234b70', '44a96b2a050e135aedd20af1efd413acc03380a2af12ccfbb63dc883b09edb91', '2024-11-28 06:43:05', 'active', NULL, '2024-11-24 10:49:30'),
 (52, 'TEACHER Ken', 'jthrlgns@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-24 12:21:31'),
-(53, 'TEACHER James', 'brighthing2003@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-24 18:35:52'),
-(55, 'kairus', 'kairuschan@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-27 00:31:33');
+(53, 'TEACHER James', 'brighthing2003@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-24 18:35:52');
 
 --
 -- Indexes for dumped tables
@@ -184,25 +166,25 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(14) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
+  MODIFY `id` int(14) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `task_assignments`
 --
 ALTER TABLE `task_assignments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- Constraints for dumped tables
@@ -224,7 +206,6 @@ ALTER TABLE `tasks`
 -- Constraints for table `task_assignments`
 --
 ALTER TABLE `task_assignments`
-  ADD CONSTRAINT `task_assignments_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `task_assignments_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `user` (`id`);
 COMMIT;
 
