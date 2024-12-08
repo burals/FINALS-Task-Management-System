@@ -248,6 +248,7 @@
                             if ($userRow['password'] == md5($password)) {
                                 $activity = "Has successfully signed in.";
                                 $user_id = $userRow['id'];
+                                $role = $userRow['role'];
                                 $this->logs($activity, $user_id);
             
                                 // Store user ID in session
@@ -257,7 +258,6 @@
                                 $_SESSION['fullname'] = $userRow['fullname']; // Assuming 'username' is a valid column in your database
 
 
-            
                                 // Role-based redirection
                                 switch ($userRow['role']) {
                                     case 'admin':
@@ -266,7 +266,7 @@
                                     case 'users':
                                         echo "<script>window.location.href = '../../user/user-dashboard.php';</script>";
                                         break;
-                                    case 'dean':
+                                    case 'chairperson':
                                         echo "<script>window.location.href = '../../dean/dean-dashboard.php';</script>";
                                         break;
                                     default:

@@ -9,12 +9,12 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Check if the role is 'users'
-if ($_SESSION['role'] !== 'dean') {
+if ($_SESSION['role'] !== 'chairperson') {
     die("Access denied! You are not authorized to access this page.");
 }
 
 // Ensure fullname is set
-$fullname = isset($_SESSION['fullname']) ? $_SESSION['fullname'] : 'Dean';
+$fullname = isset($_SESSION['fullname']) ? $_SESSION['fullname'] : 'chairperson';
 ?>
 <!DOCTYPE html>
 <html lang="en">
