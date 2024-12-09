@@ -267,7 +267,7 @@
                                         echo "<script>window.location.href = '../../user/user-dashboard.php';</script>";
                                         break;
                                     case 'chairperson':
-                                        echo "<script>window.location.href = '../../dean/dean-dashboard.php';</script>";
+                                        echo "<script>window.location.href = '../../chairperson/chairperson-dashboard.php';</script>";
                                         break;
                                     default:
                                         echo "<script>alert('Invalid role.'); window.location.href = '/FINALS-Task-Management-System-lagansua/index.php';</script>";
