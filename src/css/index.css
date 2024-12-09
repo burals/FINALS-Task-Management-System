@@ -259,6 +259,46 @@ form button:hover {
     z-index: 2;
 }
 
+/* User List Wrapper */
+.user-list-wrapper {
+    margin: 40px auto; /* Adds space above and centers the box */
+    padding: 20px; /* Adds padding inside the box */
+    background-color: #fff; /* White box background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    max-width: 800px; /* Medium width for the box */
+    width: 100%; /* Ensures responsiveness */
+}
+
+/* User List Table Styling */
+.user-list table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    margin-top: 10px; /* Adds space between the header and table */
+}
+
+.user-list th, .user-list td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd; /* Light border for cells */
+}
+
+.user-list th {
+    background-color: #1c1494; /* Navbar matching color */
+    color: #fff; /* White text for contrast */
+    font-weight: bold;
+}
+
+.user-list tr:nth-child(even) {
+    background-color: #f9f9f9; /* Light gray for alternate rows */
+}
+
+.user-list tr:hover {
+    background-color: #e6f2ff; /* Light blue hover effect */
+}
+
+
 /* Buttons for Edit/Delete */
 .edit-btn, .delete-btn {
     display: inline-block;

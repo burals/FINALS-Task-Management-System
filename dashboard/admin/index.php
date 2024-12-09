@@ -22,6 +22,8 @@
     ");
     $tasks->execute();
 
+    $user_list = $admin->runQuery("SELECT id, fullname, role FROM user");
+$user_list->execute();
     // Fetch all employees for the task creation form
     $employees = $admin->runQuery("SELECT * FROM user");
     $employees->execute();
@@ -118,7 +120,32 @@
     </div>
 </div>
 
-
+<div class="user-list-wrapper">
+    <div class="user-list">
+        <h2>User List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Fetch all users
+                while ($user = $user_list->fetch(PDO::FETCH_ASSOC)) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($user['id']) . "</td>";
+                    echo "<td>" . htmlspecialchars($user['fullname']) . "</td>";
+                    echo "<td>" . htmlspecialchars($user['role']) . "</td>";
+                    echo "</tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div class="feedback">
     <?php if (isset($_GET['success'])): ?>
