@@ -21,14 +21,26 @@ $fullname = isset($_SESSION['fullname']) ? $_SESSION['fullname'] : 'chairperson'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
+    <title>Chairperson Dashboard</title>
+    <link rel="stylesheet" href="../../src/css/chair-dashboard.css">
 </head>
 <body>
+<div class="nav-container">
+<nav class="navbar">
+
+            <p>Logged in as: <strong><?php echo htmlspecialchars($fullname); ?></strong></p>
+        <ul>
+        <a href="../admin/authentication/admin-class.php?admin_signout" class="signout">Sign Out</a>
+    </ul>
+
+</nav>
+</div>
     <h1>Welcome to Your Dashboard</h1>
-    <p>Logged in as: <strong><?php echo htmlspecialchars($fullname); ?></strong></p>
+
 
     <h2>Your Tasks</h2>
-    <p>No tasks assigned yet.</p>
 
-    <a href="../admin/authentication/admin-class.php?admin_signout" class="signout">Sign Out</a>
-</html>
+<div class="task-container">
+    <p>No tasks assigned yet.</p>
+</div>
+</body>
