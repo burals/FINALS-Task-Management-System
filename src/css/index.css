@@ -62,7 +62,7 @@ body {
 
 /* Signout Button */
 .signout {
-    background-color: #f0940b; /* Add hover effect */
+    background-color: #c0392b; /* Add hover effect */
     display: inline-block;
     text-decoration: none;
     font-weight: bold;
