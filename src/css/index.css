@@ -72,7 +72,38 @@ body {
 
     background-color: #f0f0f0; /* Optional hover background */
 }
+.edit-btn{
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: 0.3s ease;
+}
 
+.edit-btn {
+    background-color:#2c3e50;
+   
+    
+}
+.report-btn{
+   margin-top: 20px;
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: 0.3s ease;
+}
+
+.report-btn {
+    background-color:#2c3e50; /* Deep blue */
+    
+}
 /* Container for Two-Column Layout */
 .container {
     display: flex;
@@ -154,6 +185,7 @@ form button:hover {
     text-align: center;
     font-size: 2rem;
     color: #2c3e50;
+    
 }
 
 .task-list {
@@ -161,7 +193,7 @@ form button:hover {
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 10px 10px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 10px 10px 12px rgba(20, 0, 10, 0.1);
 }
 
 .task-list table {
@@ -169,6 +201,7 @@ form button:hover {
     border-collapse: collapse;
     margin: 20px auto;
     font-size: 16px;
+    
 }
 
 .task-list th, .task-list td {
@@ -187,7 +220,8 @@ form button:hover {
 }
 
 .task-list tr:hover {
-    background-color: #97b9ec;
+    background-color:#e6f2ff;
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 /* Feedback Section */
@@ -296,33 +330,7 @@ form button:hover {
 
 .user-list tr:hover {
     background-color: #e6f2ff; /* Light blue hover effect */
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 
-/* Buttons for Edit/Delete */
-.edit-btn, .delete-btn {
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 0 5px;
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: 0.3s ease;
-}
-
-.edit-btn {
-    background-color: #2c3e50; /* Deep blue */
-}
-
-.delete-btn {
-    background-color: #d9534f; /* Red for delete */
-}
-
-.edit-btn:hover {
-    background-color: #3f57f0; /* Lighter blue */
-}
-
-.delete-btn:hover {
-    background-color: #c9302c; /* Darker red */
-}

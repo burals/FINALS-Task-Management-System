@@ -27,6 +27,8 @@ $user_list->execute();
     // Fetch all employees for the task creation form
     $employees = $admin->runQuery("SELECT * FROM user");
     $employees->execute();
+
+    
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +44,7 @@ $user_list->execute();
 <body>
 <nav class="navbar">
     <div class="left">
-        <span class="user-indicator">User: <?= htmlspecialchars($user_data['fullname']); ?></span>
+        <span class="user-indicator">Logged in as: ADMIN <?= htmlspecialchars($user_data['fullname']); ?></span>
     </div>
     <ul>
         <li><a href="authentication/admin-class.php?admin_signout" class="signout">Sign Out</a></li>
@@ -111,7 +113,9 @@ $user_list->execute();
                         <td><?= $task['created_at']; ?></td>
                         <td>
                             <a href="edit-task.php?id=<?= $task['id']; ?>" class="edit-btn">Edit</a>
-                            <a href="delete-task.php?id=<?= $task['id']; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this task?')">Delete</a>
+                           
+                            <a href="view-reports.php?task_id=<?= $task['id']; ?>"class="report-btn">Reports</a>
+                           
                         </td>
                     </tr>
                 <?php endwhile; ?>

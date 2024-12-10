@@ -23,12 +23,13 @@ $fullname = isset($_SESSION['fullname']) ? $_SESSION['fullname'] : 'USER';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
     <link rel="stylesheet" href="../../src/css/user-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="nav-container">
 <nav class="navbar">
 
-            <p>Logged in as : USER <strong><?php echo htmlspecialchars($fullname); ?></strong></p>
+            <p>Logged in as: USER <strong><?php echo htmlspecialchars($fullname); ?></strong></p>
 
         <ul>
         <a href="../admin/authentication/admin-class.php?admin_signout" class="signout">Sign Out</a>
