@@ -267,7 +267,7 @@
                                         echo "<script>window.location.href = '../../user/user-dashboard.php';</script>";
                                         break;
                                     case 'chairperson':
-                                        echo "<script>window.location.href = '../../dean/dean-dashboard.php';</script>";
+                                        echo "<script>window.location.href = '../../chairperson/chairperson-dashboard.php';</script>";
                                         break;
                                     default:
                                         echo "<script>alert('Invalid role.'); window.location.href = '/FINALS-Task-Management-System-lagansua/index.php';</script>";
@@ -328,6 +328,7 @@
                     return true;
                 }
                 
+                
             }
     
             public function redirect()
@@ -372,7 +373,7 @@
                     ));
 
                     // Prepare the reset link
-                    $resetLink = "localhost/FINALS-Task-Management-System-lagansua/reset-password.php?token=" . $token . "&id=" . $userId;
+                    $resetLink = "localhost/FINALS-Task-Management-System/reset-password.php?token=" . $token . "&id=" . $userId;
 
                     // Email Subject and Body
                     $subject = "Password Reset Request";

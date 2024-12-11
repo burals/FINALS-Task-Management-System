@@ -204,7 +204,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </select>
         
         <button type="submit">Update Task</button>
+        <a href="delete-task.php?id=<?= $task['id']; ?>" 
+    class="delete-btn" onclick="return confirm('Are you sure you want to delete this task?')">Delete</a>
+    <a href="index.php" class="back-btn">Back</a>
     </form>
+    
 </div>
 </body>
 </html>

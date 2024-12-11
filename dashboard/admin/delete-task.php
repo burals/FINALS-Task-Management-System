@@ -1,30 +1,35 @@
 <?php
-require_once 'authentication/admin-class.php';
+// Include database connection
+require_once '../../database/dbconnection.php';
 
-$admin = new ADMIN();
+$database = new Database();
+$conn = $database->dbConnection();
 
-// Check if the task ID is provided
-if (isset($_GET['id'])) {
-    $task_id = $_GET['id'];
+// Get task_id and report_id from URL
+$task_id = $_GET['task_id'] ?? null;
+$report_id = $_GET['report_id'] ?? null;
 
-    try {
-        // Delete related task assignments first
-        $stmt = $admin->runQuery("DELETE FROM task_assignments WHERE task_id = :task_id");
-        $stmt->execute([':task_id' => $task_id]);
-
-        // Then delete the task
-        $stmt = $admin->runQuery("DELETE FROM tasks WHERE id = :task_id");
-        $stmt->execute([':task_id' => $task_id]);
-        header('Location: index.php?success=task_deleted');
-        exit;
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-    }
-
-} else {
-    // If no task ID is provided, redirect to the dashboard
-    header("Location: index.php");
+if (!$task_id || !$report_id) {
+    echo "No task ID or report ID provided.";
     exit;
 }
 
+// Handle report deletion
+if (isset($_GET['delete'])) {
+    $stmt = $conn->prepare("DELETE FROM reports WHERE id = ? AND task_id = ?");
+    $stmt->execute([$report_id, $task_id]);
+
+    // Set a success message to be displayed
+    $successMessage = "Report deleted successfully!";
+}
+
+// Fetch reports for the current task
+$stmt = $conn->prepare("
+    SELECT r.id, r.title, r.description, r.created_at, e.fullname AS employee_name
+    FROM reports r
+    JOIN user e ON r.employee_id = e.id
+    WHERE r.task_id = ?
+");
+$stmt->execute([$task_id]);
+$reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>

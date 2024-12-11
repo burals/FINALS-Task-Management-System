@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 08, 2024 at 03:07 PM
+-- Host: 127.0.0.1:3306
+-- Generation Time: Dec 10, 2024 at 07:06 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -124,7 +124,96 @@ INSERT INTO `logs` (`id`, `user_id`, `activity`, `created_at`) VALUES
 (255, 52, 'Has successfully signed in.', '2024-12-08 13:53:05'),
 (256, 52, 'Has successfully signed in.', '2024-12-08 13:53:14'),
 (257, 51, 'Has successfully signed in.', '2024-12-08 14:04:33'),
-(258, 52, 'Has successfully signed in.', '2024-12-08 14:04:42');
+(258, 52, 'Has successfully signed in.', '2024-12-08 14:04:42'),
+(259, 51, 'Has successfully signed in.', '2024-12-08 14:09:28'),
+(260, 52, 'Has successfully signed in.', '2024-12-08 14:09:34'),
+(261, 53, 'Has successfully signed in.', '2024-12-08 14:09:50'),
+(262, 51, 'Has successfully signed in.', '2024-12-08 14:15:33'),
+(263, 52, 'Has successfully signed in.', '2024-12-08 14:21:41'),
+(264, 51, 'Has successfully signed in.', '2024-12-08 14:21:50'),
+(265, 51, 'Has successfully signed in.', '2024-12-08 14:23:44'),
+(266, 52, 'Has successfully signed in.', '2024-12-08 14:25:29'),
+(267, 51, 'Has successfully signed in.', '2024-12-08 14:28:32'),
+(268, 51, 'Has successfully signed in.', '2024-12-08 14:37:43'),
+(269, 51, 'Has successfully signed in.', '2024-12-08 14:38:42'),
+(270, 52, 'Has successfully signed in.', '2024-12-08 14:38:54'),
+(271, 51, 'Has successfully signed in.', '2024-12-08 14:39:02'),
+(272, 51, 'Has successfully signed in.', '2024-12-08 14:40:42'),
+(273, 53, 'Has successfully signed in.', '2024-12-08 14:41:30'),
+(274, 51, 'Has successfully signed in.', '2024-12-09 11:42:57'),
+(275, 51, 'Has successfully signed in.', '2024-12-09 11:43:44'),
+(276, 51, 'Has successfully signed in.', '2024-12-09 11:46:28'),
+(277, 51, 'Has successfully signed in.', '2024-12-09 11:48:52'),
+(278, 51, 'Has successfully signed in.', '2024-12-09 11:56:47'),
+(279, 51, 'Has successfully signed in.', '2024-12-09 11:57:27'),
+(280, 52, 'Has successfully signed in.', '2024-12-09 11:57:37'),
+(281, 52, 'Has successfully signed in.', '2024-12-09 11:57:49'),
+(282, 53, 'Has successfully signed in.', '2024-12-09 11:57:56'),
+(283, 52, 'Has successfully signed in.', '2024-12-09 11:58:06'),
+(284, 51, 'Has successfully signed in.', '2024-12-09 11:58:12'),
+(285, 52, 'Has successfully signed in.', '2024-12-09 12:00:28'),
+(286, 51, 'Has successfully signed in.', '2024-12-09 12:00:34'),
+(287, 52, 'Has successfully signed in.', '2024-12-09 12:33:08'),
+(288, 51, 'Has successfully signed in.', '2024-12-09 12:52:41'),
+(289, 51, 'Has successfully signed in.', '2024-12-10 08:09:51'),
+(290, 53, 'Has successfully signed in.', '2024-12-10 09:58:55'),
+(291, 51, 'Has successfully signed in.', '2024-12-10 10:01:36'),
+(292, 53, 'Has successfully signed in.', '2024-12-10 10:01:44'),
+(293, 53, 'Has successfully signed in.', '2024-12-10 10:01:58'),
+(294, 51, 'Has successfully signed in.', '2024-12-10 10:02:08'),
+(295, 52, 'Has successfully signed in.', '2024-12-10 10:04:18'),
+(296, 51, 'Has successfully signed in.', '2024-12-10 10:04:25'),
+(297, 52, 'Has successfully signed in.', '2024-12-10 10:04:54'),
+(298, 51, 'Has successfully signed in.', '2024-12-10 10:05:03'),
+(299, 52, 'Has successfully signed in.', '2024-12-10 10:18:33'),
+(300, 51, 'Has successfully signed in.', '2024-12-10 10:24:55'),
+(301, 52, 'Has successfully signed in.', '2024-12-10 10:27:00'),
+(302, 52, 'Has successfully signed in.', '2024-12-10 10:29:22'),
+(303, 51, 'Has successfully signed in.', '2024-12-10 10:35:37'),
+(304, 52, 'Has successfully signed in.', '2024-12-10 10:35:48'),
+(305, 51, 'Has successfully signed in.', '2024-12-10 10:39:58'),
+(306, 52, 'Has successfully signed in.', '2024-12-10 10:40:03'),
+(307, 51, 'Has successfully signed in.', '2024-12-10 10:40:55'),
+(308, 52, 'Has successfully signed in.', '2024-12-10 10:41:02'),
+(309, 51, 'Has successfully signed in.', '2024-12-10 10:41:13'),
+(310, 52, 'Has successfully signed in.', '2024-12-10 10:42:43'),
+(311, 51, 'Has successfully signed in.', '2024-12-10 10:43:03'),
+(312, 53, 'Has successfully signed in.', '2024-12-10 10:52:02'),
+(313, 51, 'Has successfully signed in.', '2024-12-10 10:53:31'),
+(314, 52, 'Has successfully signed in.', '2024-12-10 10:54:54'),
+(315, 51, 'Has successfully signed in.', '2024-12-10 11:02:46'),
+(316, 53, 'Has successfully signed in.', '2024-12-10 14:38:13'),
+(317, 51, 'Has successfully signed in.', '2024-12-10 14:38:34'),
+(318, 53, 'Has successfully signed in.', '2024-12-10 14:38:39'),
+(319, 51, 'Has successfully signed in.', '2024-12-10 14:39:41'),
+(320, 53, 'Has successfully signed in.', '2024-12-10 14:39:50'),
+(321, 51, 'Has successfully signed in.', '2024-12-10 14:41:26'),
+(322, 51, 'Has successfully signed in.', '2024-12-10 16:32:30'),
+(323, 51, 'Has successfully signed in.', '2024-12-10 16:45:22'),
+(324, 51, 'Has successfully signed in.', '2024-12-10 17:37:45'),
+(325, 51, 'Has successfully signed in.', '2024-12-10 17:39:32');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reports`
+--
+
+CREATE TABLE `reports` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `task_id` int(11) DEFAULT NULL,
+  `employee_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `reports`
+--
+
+INSERT INTO `reports` (`id`, `title`, `description`, `task_id`, `employee_id`, `created_at`) VALUES
+(38, 'hi', 'test', 23, 51, '2024-12-10 17:54:13');
 
 -- --------------------------------------------------------
 
@@ -148,8 +237,7 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`id`, `title`, `description`, `due_date`, `assigned_employee`, `status`, `created_at`, `updated_at`) VALUES
-(18, '1', '2', '2024-12-12', NULL, 'in progress', '2024-11-24 18:51:19', '2024-11-24 18:52:41'),
-(22, '123', '2321', '2025-12-12', NULL, 'pending', '2024-12-08 13:41:21', '2024-12-08 13:41:21');
+(23, 'test', '123', '2024-12-12', NULL, 'in progress', '2024-12-10 10:25:06', '2024-12-10 17:30:45');
 
 -- --------------------------------------------------------
 
@@ -168,9 +256,7 @@ CREATE TABLE `task_assignments` (
 --
 
 INSERT INTO `task_assignments` (`id`, `task_id`, `employee_id`) VALUES
-(20, 18, 51),
-(21, 18, 52),
-(25, 22, 57);
+(37, 23, 52);
 
 -- --------------------------------------------------------
 
@@ -196,9 +282,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `fullname`, `email`, `password`, `reset_token`, `token_expiry`, `status`, `tokencode`, `created_at`, `role`) VALUES
-(51, 'DEAN Seth', 'sthlgns@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-24 10:49:30', 'admin'),
+(51, 'DEAN Seth', 'sthlgns@gmail.com', '202cb962ac59075b964b07152d234b70', '2dd70d2c0beb0cf59e52f1a76b37aaf6d9b4220a5326f9481b708a6e8d82cbd9', '2024-12-10 12:21:07', 'active', NULL, '2024-11-24 10:49:30', 'admin'),
 (52, 'TEACHER Ken', 'jthrlgns@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-24 12:21:31', 'chairperson'),
-(53, 'TEACHER James', 'brighthing2003@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-24 18:35:52', 'users'),
+(53, 'TEACHER James', 'brighthing2003@gmail.com', '202cb962ac59075b964b07152d234b70', 'e189b02696a7fa55294cc54039cc086777656216e2c0e092fd0f9db9385d9aee', '2024-12-10 12:23:49', 'active', NULL, '2024-11-24 18:35:52', 'users'),
 (57, 'Wrenchner', 'kairuschan@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-12-06 12:53:04', 'users');
 
 --
@@ -211,6 +297,14 @@ INSERT INTO `user` (`id`, `fullname`, `email`, `password`, `reset_token`, `token
 ALTER TABLE `logs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `reports`
+--
+ALTER TABLE `reports`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `task_id` (`task_id`),
+  ADD KEY `reports_ibfk_2` (`employee_id`);
 
 --
 -- Indexes for table `tasks`
@@ -241,19 +335,25 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(14) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=259;
+  MODIFY `id` int(14) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=326;
+
+--
+-- AUTO_INCREMENT for table `reports`
+--
+ALTER TABLE `reports`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `task_assignments`
 --
 ALTER TABLE `task_assignments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -270,6 +370,13 @@ ALTER TABLE `user`
 --
 ALTER TABLE `logs`
   ADD CONSTRAINT `logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `reports`
+--
+ALTER TABLE `reports`
+  ADD CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`),
+  ADD CONSTRAINT `reports_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `tasks`
