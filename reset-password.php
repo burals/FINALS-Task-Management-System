@@ -35,7 +35,8 @@ $token = $_GET['token'];
         <br>
         <label class="pass" for="new_password">Password</label>
         <input type="password" class="pass1" name="new_password" placeholder="Enter your new password" required>
-        <br>   
+        <br>
+       
         <input type="password" class="pass2" id="confirm_new_password" name="confirm_new_password" placeholder="Confirm Password" required>
         <br>
         <button type="submit" name="btn-reset-password">Reset Password</button>

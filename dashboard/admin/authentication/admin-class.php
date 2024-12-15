@@ -1,7 +1,7 @@
 <?php
-        require_once __DIR__. '/../../../database/dbconnection.php';
-        include_once __DIR__. '/../../../config/settings-configuration.php';
-        require_once __DIR__. '/../../../src/vendor/autoload.php';
+        require_once __DIR__.'/../../../database/dbconnection.php';
+        include_once __DIR__.'/../../../config/settings-configuration.php';
+        require_once __DIR__.'/../../../src/vendor/autoload.php';
         use PHPMailer\PHPMailer\PHPMailer;
         use PHPMailer\PHPMailer\SMTP;
         use PHPMailer\PHPMailer\Exception;
@@ -228,48 +228,73 @@
             }
 
             public function adminSignin($email, $password, $csrf_token)
-        {
-            try{
-                if(!isset($csrf_token) || !hash_equals($_SESSION['csrf_token'], $csrf_token)){
-                    echo "<script>alert('Invalid CSRF token.'); window.location.href = '../../../index.php'; </script>";
-                    exit;
-                }
-                unset($_SESSION['csrf_token']);
-
-                $stmt = $this->runQuery("SELECT * FROM user WHERE email = :email AND status = :status");
-                $stmt->execute(array(":email" => $email, ":status" => "active"));
-                $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if($stmt->rowCount() == 1){
-                    if($userRow['status']  == "active"){
-                        if($userRow['password'] == md5($password)){
-                            $activity = "Has succesfully signed in.";
-                            $user_id = $userRow['id'];
-                            $this->logs($activity, $user_id);
-
-                            $_SESSION['adminSession'] = $user_id;
-                            echo "<script>window.location.href = '../index.php'; </script>";
-                            exit;
-                        }else{
-                            echo "<script>alert('Password is incorrect.'); window.location.href = '../../../index.php'; </script>";
-                            exit;
-                        }
-                    }else{
-                        echo "<script>alert('Entered Email is not verify.'); window.location.href = '../../../index.php'; </script>";
+            {
+                try {
+                    // CSRF Token Validation
+                    if (!isset($csrf_token) || !hash_equals($_SESSION['csrf_token'], $csrf_token)) {
+                        echo "<script>alert('Invalid CSRF token.'); window.location.href = '../../../index.php'; </script>";
                         exit;
                     }
-                }else{
-                    echo "<script>alert('No Account Found.'); window.location.href = '../../../index.php'; </script>";
-                    exit;
-                }
+                    unset($_SESSION['csrf_token']);
             
-            }catch(PDOException $ex){
-                echo $ex->getMessage();
+                    // Fetch user from database
+                    $stmt = $this->runQuery("SELECT * FROM user WHERE email = :email AND status = :status");
+                    $stmt->execute(array(":email" => $email, ":status" => "active"));
+                    $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+                    if ($stmt->rowCount() == 1) {
+                        if ($userRow['status'] == "active") {
+                            // Verify Password
+                            if ($userRow['password'] == md5($password)) {
+                                $activity = "Has successfully signed in.";
+                                $user_id = $userRow['id'];
+                                $role = $userRow['role'];
+                                $this->logs($activity, $user_id);
+            
+                                // Store user ID in session
+                                $_SESSION['adminSession'] = $user_id;
+                                $_SESSION['user_id'] = $userRow['id']; // Set after successful login
+                                $_SESSION['role'] = $userRow['role'];
+                                $_SESSION['fullname'] = $userRow['fullname']; // Assuming 'username' is a valid column in your database
+
+
+                                // Role-based redirection
+                                switch ($userRow['role']) {
+                                    case 'admin':
+                                        echo "<script>window.location.href = '../index.php';</script>";
+                                        break;
+                                    case 'users':
+                                        echo "<script>window.location.href = '../../user/user-dashboard.php';</script>";
+                                        break;
+                                    case 'chairperson':
+                                        echo "<script>window.location.href = '../../chairperson/chairperson-dashboard.php';</script>";
+                                        break;
+                                    default:
+                                        echo "<script>alert('Invalid role.'); window.location.href = '/FINALS-Task-Management-System-lagansua/index.php';</script>";
+                                        break;
+                                }
+                                exit;
+                            } else {
+                                echo "<script>alert('Password is incorrect.'); window.location.href = '../../../index.php'; </script>";
+                                exit;
+                            }
+                        } else {
+                            echo "<script>alert('Entered email is not verified.'); window.location.href = '../../../index.php'; </script>";
+                            exit;
+                        }
+                    } else {
+                        echo "<script>alert('No account found.'); window.location.href = '../../../index.php'; </script>";
+                        exit;
+                    }
+            
+                } catch (PDOException $ex) {
+                    echo $ex->getMessage();
+                }
             }
-        }
+            
             public function adminSignout()
             {
-                unset($_SESSION['adminSession']);
+                // Redirect with a success message
                 echo "<script>alert('Sign Out Successfully'); window.location.href = '../../../index.php';</script>";
                 exit;
             }
@@ -347,7 +372,7 @@
                     ));
 
                     // Prepare the reset link
-                    $resetLink = "localhost/FINALS-Task-Management-System/reset-password.php?token=" . $token . "&id=" . $userId;
+                    $resetLink = "localhost/FINALS-Task-Management-System-lagansua/reset-password.php?token=" . $token . "&id=" . $userId;
 
                     // Email Subject and Body
                     $subject = "Password Reset Request";
@@ -527,4 +552,4 @@
             $adminReset = new ADMIN();
             $adminReset->resetPassword($token, $new_password, $csrf_token);
         }
-?>
+        

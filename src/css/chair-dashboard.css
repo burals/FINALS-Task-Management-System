@@ -1,0 +1,137 @@
+/* General Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navigation Bar Container */
+.nav-container {
+    z-index: 1000;
+    background-color: #2c3e50;
+    padding: 10px 20px;
+    box-shadow: 10px 10px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Navigation Bar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ecf0f1;
+}
+
+.navbar p {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* Navigation Links */
+.navbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.navbar ul a {
+    font-weight: bold;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #e74c3c;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar ul a:hover {
+    background-color: #ffffff;
+    color: #2c3e50;
+}
+
+/* Header Styling */
+h1 {
+    font-size: 28px;
+    text-align: center;
+    margin: 20px 0;
+    color: #34495e;
+}
+
+h2 {
+    font-size: 22px;
+    text-align: center;
+    margin: 10px 0;
+    color: #7f8c8d;
+}
+
+/* Task Container */
+.task-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #dcdde1;
+    border-radius: 8px;
+    box-shadow: 10px 10px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.task-container p {
+    font-size: 18px;
+    color: #95a5a6;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border: 1px solid #dcdde1;
+}
+
+thead {
+    background-color: #2c3e50;
+    color: #ffffff;
+}
+
+thead th {
+    padding: 10px;
+    text-align: left;
+}
+
+tbody tr {
+    border-bottom: 1px solid #dcdde1;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f4f4f9;
+}
+
+tbody td {
+    padding: 10px;
+    text-align: left;
+}
+
+tbody tr:hover {
+    background-color: #ecf0f1;
+}
+
+tbody td a {
+    font-size: 14px;
+    text-decoration: none;
+    color: #e74c3c;
+    padding: 5px 10px;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+tbody td a:hover {
+    background-color: #c0392b;
+    color: #ffffff;
+}
+

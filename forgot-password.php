@@ -25,7 +25,7 @@ if (empty($_SESSION['csrf_token'])) {
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <label for="email">Email:</label> <br>
             <input type="email" class="email" name="email" placeholder="Enter your Email" required> 
-            <button type="submit" name="btn-forgot-password">Send Reset Link</button>            
+            <button type="submit" name="btn-forgot-password">Send Reset Link</button>
         </form>
     </div>
     </div>

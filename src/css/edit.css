@@ -1,112 +1,140 @@
-/* Reset some default styles */
-body, h2, form, label, input, textarea, select, button {
+/* General Reset */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* General body styling */
+/* Body and Font Styles */
 body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(to right, #f8f9fa, #e9ecef);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    padding: 20px;
 }
 
-/* Main container styling */
-.container {
-    background-color: #ffffff;
-    width: 100%;
-    max-width: 500px;
-    padding: 20px 30px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+/* Form Container */
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-/* Form heading */
-.container h2 {
-    margin-bottom: 20px;
-    font-size: 1.8rem;
-    color: #343a40;
+h2 {
     text-align: center;
-}
-
-/* Labels */
-label {
-    display: block;
-    margin-bottom: 5px;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #1c1494;
     font-weight: bold;
-    color: #495057;
 }
 
-/* Inputs, textarea, and select */
+/* Form Elements */
+label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+}
+
 input[type="text"],
-textarea,
 input[type="date"],
 input[type="time"],
+textarea,
 select {
     width: 100%;
-    margin-bottom: 15px;
     padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ced4da;
-    border-radius: 8px;
-    outline: none;
-    transition: all 0.3s ease;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
 }
 
 input[type="text"]:focus,
-textarea:focus,
 input[type="date"]:focus,
 input[type="time"]:focus,
+textarea:focus,
 select:focus {
-    border-color: #495057;
-    box-shadow: 0 0 5px rgba(73, 80, 87, 0.3);
+    border-color: #1c1494;
+    outline: none;
 }
 
-/* Multiple select styling */
-select[multiple] {
-    height: auto;
-    min-height: 50px;
+textarea {
+    resize: vertical;
+    min-height: 80px;
 }
 
-/* Buttons */
-button {
+input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.checkbox-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkbox-group div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Button Styles */
+button[type="submit"] {
     width: 100%;
-    padding: 10px 15px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #fff;
-    background-color: #007bff;
+    padding: 12px;
+    background-color: #1c1494;
+    color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease-in-out;
 }
 
-button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
+button[type="submit"]:hover {
+    background-color: #f0940b;
 }
 
-button:active {
-    transform: translateY(0);
+/* Dropdown Styling */
+select {
+    background-color: #fff;
 }
 
-/* Responsive design */
-@media (max-width: 600px) {
-    .container {
-        padding: 15px 20px;
+/* Improved Checkbox Alignment */
+.checkbox-group div label {
+    font-size: 13px;
+    font-weight: normal;
+    color: #555;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .form-container {
+        width: 95%;
+        padding: 15px;
     }
-
-    .container h2 {
-        font-size: 1.5rem;
+    h2 {
+        font-size: 20px;
     }
-
-    button {
-        font-size: 0.9rem;
+    label {
+        font-size: 13px;
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    textarea,
+    select {
+        font-size: 13px;
+    }
+    button[type="submit"] {
+        font-size: 13px;
+        padding: 10px;
     }
 }
