@@ -2,7 +2,6 @@
 // Include database connection
 require_once '../../database/dbconnection.php';
 
-// Instantiate Database class
 $database = new Database();
 $conn = $database->dbConnection();
 
@@ -14,7 +13,6 @@ if (!$task_id) {
     echo "No task ID provided.";
     exit;
 }
-
 try {
     // Begin transaction
     $conn->beginTransaction();
@@ -31,7 +29,7 @@ try {
     $conn->commit();
 
     // Redirect with success message
-    header("Location: index.php?message=Task and all associated reports deleted successfully!");
+    header("Location: chairperson-dashboard.php?message=Task and all associated reports deleted successfully!");
     exit;
 } catch (Exception $e) {
     // Rollback on error

@@ -38,7 +38,6 @@ $user_list->execute();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../../src/css/index.css">
-    
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -88,6 +87,7 @@ $user_list->execute();
     <!-- Right Column: Task List -->
     <div class="task-list">
         <h2>Task List</h2>
+        <?php if ($tasks->rowCount() > 0): ?>
         <table>
             <thead>
                 <tr>
@@ -115,13 +115,19 @@ $user_list->execute();
                             <a href="edit-task.php?id=<?= $task['id']; ?>" class="edit-btn">Edit</a>
                            
                             <a href="view-reports.php?task_id=<?= $task['id']; ?>"class="report-btn">Reports</a>
-                           
-                        </td>
+                            <?php endwhile; ?>
+            <?php else: ?>
+               
+                    <td  style="text-align: center;">No task added yet</td>
+                
+            <?php endif; ?>
+                            </td>
                     </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
+           
+        </tbody>
+    </table>
     </div>
+    
 </div>
 
 <div class="user-list-wrapper">
