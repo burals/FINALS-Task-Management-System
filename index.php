@@ -1,5 +1,6 @@
 <?php
     include_once 'config/settings-configuration.php';
+    include_once './config/settings-configuration.php';
 
     // Check if login is successful by checking the URL parameter
     $login_successful = isset($_GET['status']) && $_GET['status'] == 'success';

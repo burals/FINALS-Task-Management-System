@@ -166,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div class="form-container">
-    <h2>Edit Task</h2>
+    <h2>Edit Task: <?= htmlspecialchars($task['title'] ?? 'Unknown Task') ?></h2>
     <form method="POST">
         <label>Title:</label>
         <input type="text" name="title" value="<?php echo htmlspecialchars($task['title']); ?>" required>
@@ -204,11 +204,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </select>
         
         <button type="submit">Update Task</button>
-        <a href="delete-task.php?id=<?= $task['id']; ?>" 
-    class="delete-btn" onclick="return confirm('Are you sure you want to delete this task?')">Delete</a>
+        <a href="delete-task.php?task_id=<?= htmlspecialchars($task['id']); ?>" 
+   class="delete-btn" 
+   onclick="return confirm('Are you sure you want to delete this task and all associated reports?');">
+   Delete</a>
     <a href="index.php" class="back-btn">Back</a>
     </form>
     
 </div>
 </body>
+
 </html>

@@ -1,125 +1,103 @@
 <?php
-// Include the Database and Authentication Classes
-include_once '../../database/dbconnection.php';
-include_once '../admin/authentication/admin-class.php';
-include_once '../../config/settings-configuration.php';
+require_once '../admin/authentication/admin-class.php';
 
-// Create an instance of the Database class and establish a connection
-$db = new Database();
-$conn = $db->dbConnection();
-
-// Ensure user is logged in
-if (!isset($_SESSION['user_id'])) { 
-    die("Access denied! Please log in first.");
+$admin = new ADMIN();
+if (!$admin->isUserLoggedIn()) {
+    $admin->redirect('../../');
 }
 
-// Get the logged-in user's full name
-$fullname = isset($_SESSION['fullname']) ? $_SESSION['fullname'] : 'User';
+// Fetch user data
+$stmt = $admin->runQuery("SELECT * FROM user WHERE id = :id");
+$stmt->execute(array(":id" => $_SESSION['adminSession']));
+$user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Fetch tasks assigned to the user
-$tasks = $conn->prepare("SELECT * FROM tasks WHERE assigned_employee = :assigned_employee");
-$tasks->execute([':assigned_employee' => $fullname]);
+// Define the profile picture path (assuming it's stored in the 'uploads/{user_id}/profile.jpg')
+$profilePicturePath = "../uploads/" . $user_data['id'] . "/profile.jpg";
 
-// Handle task status update
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_task_status'])) {
-    $task_id = $_POST['task_id'];
-    $status = $_POST['status'];
-
-    // Update task status
-    $updateTask = $conn->prepare("UPDATE tasks SET status = :status WHERE id = :task_id");
-    $updateTask->execute([':status' => $status, ':task_id' => $task_id]);
-
-    // Redirect to refresh the page
-    header('Location: task-dashboard.php');
-    exit();
+// Check if the profile picture exists, otherwise use a default image
+if (!file_exists($profilePicturePath)) {
+    $profilePicturePath = "default-profile.jpg"; // Set your default profile picture
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_task_status'])) {
-    $task_id = $_POST['task_id'];
-    $status = $_POST['status'];
-
-    // Update task status in the database
-    $updateTask = $conn->prepare("UPDATE tasks SET status = :status WHERE id = :task_id");
-    $updateTask->execute([':status' => $status, ':task_id' => $task_id]);
-
-    // Redirect to the same page to refresh the task list
-    header('Location: task-dashboard.php');
-    exit();
-}
-
+// Fetch assigned tasks for the user
+$tasks = $admin->runQuery("
+    SELECT t.*, 
+           GROUP_CONCAT(u.fullname SEPARATOR ', ') AS assigned_employees
+    FROM tasks t
+    LEFT JOIN task_assignments ta ON t.id = ta.task_id
+    LEFT JOIN user u ON ta.employee_id = u.id
+    WHERE ta.employee_id = :id
+    GROUP BY t.id
+");
+$tasks->execute(array(":id" => $user_data['id']));
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($fullname); ?> Dashboard</title>
-    <link rel="stylesheet" href="../../src/css/dashboard.css">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="../../src/css/user-dashboard.css">
+    <link rel="stylesheet" href="../../src/css/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-<div class="nav-container">
-    <nav class="navbar">
-        <p>Logged in as: user <strong><?php echo htmlspecialchars($fullname); ?></strong></p>
-        <ul>
-            <a href="../admin/authentication/admin-class.php?admin_signout" class="signout">Sign Out</a>
-        </ul>
-    </nav>
-</div>
+    <!-- Sidebar -->
+    <div class="side-bar">
+        <img class="profile-pic" src="<?= htmlspecialchars($profilePicturePath); ?>" alt="Profile Picture">
+        <span class="user-indicator"><?= strtoupper($user_data['role']) ?> <?= htmlspecialchars($user_data['fullname']); ?></span>
+        <h3><a href="user-dashboard.php" class="active">DASHBOARD</a></h3>
+        <h3><a href="my-task.php">MY TASKS</a></h3>
+        <h3><a href="profile.php">PROFILE</a></h3>
+        <h3><a href="../admin/authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
+    </div>
 
-<h1>Welcome to Your Dashboard</h1>
-<h2>Your Tasks</h2>
+    <!-- Main Content -->
+    <div class="content">
+        <h1>Welcome, <?= htmlspecialchars($user_data['fullname']); ?></h1>
 
-<div class="container">
-    <div class="task-list">
         <h2>Your Assigned Tasks</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($tasks->rowCount() > 0): ?>
+        <?php if ($tasks->rowCount() > 0): ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task ID</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Assigned Employees</th>
+                    </tr>
+                </thead>
+                <tbody>
                     <?php while ($task = $tasks->fetch(PDO::FETCH_ASSOC)): ?>
                         <tr>
-                            <td><?= $task['id']; ?></td>
+                            <td><?= htmlspecialchars($task['id']); ?></td>
                             <td><?= htmlspecialchars($task['title']); ?></td>
                             <td><?= htmlspecialchars($task['description']); ?></td>
-                            <td><?= $task['due_date']; ?></td>
+                            <td><?= htmlspecialchars($task['due_date']); ?></td>
                             <td><?= htmlspecialchars($task['status']); ?></td>
-                            <td>
-                                <?php if ($task['status'] != 'Completed'): ?>
-                                    <form method="POST" action="task-dashboard.php">
-                                        <input type="hidden" name="task_id" value="<?= $task['id']; ?>">
-                                        <select name="status" required>
-                                            <option value="In Progress" <?= $task['status'] == 'In Progress' ? 'selected' : ''; ?>>In Progress</option>
-                                            <option value="Completed" <?= $task['status'] == 'Completed' ? 'selected' : ''; ?>>Completed</option>
-                                        </select>
-                                        <button type="submit" name="update_task_status">Update Status</button>
-                                    </form>
-                                <?php endif; ?>
-                            </td>
+                            <td><?= htmlspecialchars($task['assigned_employees']); ?></td>
                         </tr>
                     <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="6">No tasks assigned yet.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>No tasks assigned to you.</p>
+        <?php endif; ?>
     </div>
-</div>
 
-<div>
-    
-</div>
+    <!-- JavaScript to Toggle Sidebar on Mobile -->
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.querySelector('.side-bar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
+
 </body>
+
 </html>

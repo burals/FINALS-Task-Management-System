@@ -1,3 +1,4 @@
+/* General Body Styling */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
@@ -6,16 +7,16 @@ body {
     padding: 0;
 }
 
-
+/* Navigation Bar Container */
 .nav-container {
     z-index: 1000;
     background-color: #2c3e50;
+    padding: 10px 20px;
     box-shadow: 10px 10px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* Navigation Bar Styling */
 .navbar {
-  
-    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -23,11 +24,11 @@ body {
 }
 
 .navbar p {
-    font-family: 'Roboto', 'Open Sans', Arial, sans-serif;
     margin: 0;
-    font-size: 17px;
+    font-size: 16px;
 }
 
+/* Navigation Links */
 .navbar ul {
     list-style: none;
     margin: 0;
@@ -37,7 +38,6 @@ body {
 }
 
 .navbar ul a {
-    
     font-weight: bold;
     text-decoration: none;
     color: #ffffff;
@@ -53,7 +53,7 @@ body {
     color: #2c3e50;
 }
 
-
+/* Header Styling */
 h1 {
     font-size: 28px;
     text-align: center;
@@ -68,10 +68,9 @@ h2 {
     color: #7f8c8d;
 }
 
-
-
+/* Task Container */
 .task-container {
-    max-width: 600px;
+    max-width: 800px;
     margin: 20px auto;
     padding: 20px;
     background-color: #ffffff;
@@ -85,3 +84,91 @@ h2 {
     font-size: 18px;
     color: #95a5a6;
 }
+
+/* Table Styling */
+table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border: 1px solid #dcdde1;
+}
+
+thead {
+    background-color: #2c3e50;
+    color: #ffffff;
+}
+
+thead th {
+    padding: 10px;
+    text-align: left;
+}
+
+tbody tr {
+    border-bottom: 1px solid #dcdde1;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f4f4f9;
+}
+
+tbody td {
+    padding: 10px;
+    text-align: left;
+}
+
+tbody tr:hover {
+    background-color: #ecf0f1;
+}
+
+tbody td a {
+    font-size: 14px;
+    text-decoration: none;
+    color: #e74c3c;
+    padding: 5px 10px;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+tbody td a:hover {
+    background-color: #c0392b;
+    color: #ffffff;
+}
+/* General Button Styles */
+.btn {
+    display: inline-block;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #fff;
+    margin: 5px;
+}
+
+.btn-primary {
+    background-color: #3498db;
+}
+
+.btn-secondary {
+    background-color: #2c3e50;
+}
+
+.btn-success {
+    background-color: #2ecc71;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+}
+
+.alert-success {
+    color: #fff;
+    background-color: #2ecc71;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    text-align: center;
+}
+
