@@ -53,6 +53,8 @@ $userData = $profile->getUserData($userId);
     <title>Edit Profile</title>
     <link rel="stylesheet" href="../../src/css/user-dashboard.css">
     <link rel="stylesheet" href="../../src/css/index.css">
+    <link rel="stylesheet" href="../../src/css/edit-profile.css">
+    
 </head>
 
 <body>
@@ -68,29 +70,38 @@ $userData = $profile->getUserData($userId);
 
    <!-- Main Content -->
    <div class="content">
-       <h1>Edit Your Profile</h1>
+    <h1 class="content-title">Edit Your Profile</h1>
 
-       <!-- Form to update profile information -->
-       <form action="profile.php" method="POST" enctype="multipart/form-data">
-           <!-- Profile Picture -->
-           <label for="profile_picture">Profile Picture</label>
-           <input type="file" name="profile_picture" accept="image/*">
+    <!-- Form to update profile information -->
+    <form action="profile.php" method="POST" enctype="multipart/form-data" class="profile-form">
+        <!-- Profile Picture -->
+        <div class="form-group">
+            <label for="profile_picture" class="form-label">Profile Picture</label>
+            <input type="file" name="profile_picture" class="form-input" accept="image/*">
+        </div>
 
-           <!-- Fullname -->
-           <label for="fullname">Full Name</label>
-           <input type="text" name="fullname" value="<?php echo $userData['fullname']; ?>" required>
+        <!-- Fullname -->
+        <div class="form-group">
+            <label for="fullname" class="form-label">Full Name</label>
+            <input type="text" name="fullname" class="form-input" value="<?php echo $userData['fullname']; ?>" required>
+        </div>
 
-           <!-- Email -->
-           <label for="email">Email</label>
-           <input type="email" name="email" value="<?php echo $userData['email']; ?>" required>
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" class="form-input" value="<?php echo $userData['email']; ?>" required>
+        </div>
 
-           <!-- Password Change (optional) -->
-           <label for="new_password">New Password (optional)</label>
-           <input type="password" name="new_password" placeholder="New Password (optional)">
+        <!-- Password Change (optional) -->
+        <div class="form-group">
+            <label for="new_password" class="form-label">New Password (optional)</label>
+            <input type="password" name="new_password" class="form-input" placeholder="New Password (optional)">
+        </div>
 
-           <!-- Submit Button -->
-           <button type="submit">Update Profile</button>
-       </form>
+        <!-- Submit Button -->
+        <button type="submit" class="form-button">Update Profile</button>
+    </form>
+</div>
 
    </div>
 
