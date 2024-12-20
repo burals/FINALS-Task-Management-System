@@ -62,11 +62,10 @@ $userData = $profile->getUserData($userId);
    <div class="side-bar">
    <img class="profile-pic" src="profile-picture.jpg" alt="Profile Picture">
    <span class="user-indicator"><?= strtoupper($userData['role']) ?> <?= htmlspecialchars($userData['fullname']); ?></span>
-   <h3><a href="index.php" class="active">DASHBOARD</a></h3>
+   <h3><a href="chairperson-dashboard.php" >DASHBOARD</a></h3>
     <h3><a href="add-task.php">ADD TASK</a></h3>
     <h3><a href="task-list.php">TASK LIST</a></h3>
-    <h3><a href="user-list.php">USER LIST</a></h3>
-    <h3><a href="profile.php">PROFILE</a></h3>
+    <h3><a href="profile.php" class="active">PROFILE </a></h3>
     <h3><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
    </div>
 
