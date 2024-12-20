@@ -29,7 +29,7 @@ try {
     $conn->commit();
 
     // Redirect with success message
-    header("Location: chairperson-dashboard.php?message=Task and all associated reports deleted successfully!");
+    header("Location: task-list.php?message=Task and all associated reports deleted successfully!");
     exit;
 } catch (Exception $e) {
     // Rollback on error

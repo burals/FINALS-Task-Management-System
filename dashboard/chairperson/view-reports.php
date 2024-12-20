@@ -46,9 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Fetch reports for the current task
 $stmt = $conn->prepare("
-    SELECT r.id, r.title, r.description, r.created_at, e.fullname AS employee_name
+    SELECT r.id, r.user_id, r.task_id, r.content, r.created_at
     FROM reports r
-    JOIN user e ON r.employee_id = e.id
+    JOIN user e ON r.user_id = e.id
     WHERE r.task_id = ?
 ");
 $stmt->execute([$task_id]);
@@ -62,7 +62,7 @@ $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View and Submit Reports</title>
+    <title>Reports</title>
     <link rel="stylesheet" href="../../src/css/reports.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -77,52 +77,19 @@ $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="card-body">
                 <form method="POST">
                     <div class="form-group">
-                        <label for="title">Report Title:</label>
-                        <input type="text" name="title" id="title" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Report Description:</label>
-                        <textarea name="description" id="description" class="form-control" rows="4" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-success mt-3">Submit Report</button>
-                    <a href="chairperson-dashboard.php" class="btn btn-primary mb-4">Back</a>
+                    <form method="POST" enctype="multipart/form-data" action="my-task.php">
+                                        <input type="hidden" name="task_id" value="<?= $task['id']; ?>"> <!-- Hidden task ID -->
+                                        <input type="file" name="document">
+                                        <textarea name="report_content" placeholder="Write your report here..."></textarea>
+                                        
+                                    </form>
+                                    <button type="submit" name="submit_task_action">Upload Document / Generate Report</button>
+                    <a href="task-list.php" class="btn btn-primary mb-4">Back</a>
                 </form>
             </div>
         </div>
 
-        <!-- List of Submitted Reports -->
-        <h3>Submitted Reports</h3>
-        <?php if (!empty($reports)): ?>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Submitted By</th>
-                        <th>Created At</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($reports as $report): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($report['id']) ?></td>
-                            <td><?= htmlspecialchars($report['title']) ?></td>
-                            <td><?= htmlspecialchars($report['description']) ?></td>
-                            <td><?= htmlspecialchars($report['employee_name']) ?></td>
-                            <td><?= htmlspecialchars($report['created_at']) ?></td>
-                            <td><a href="delete-report.php?report_id=<?= $report['id'] ?>&task_id=<?= $task_id ?>" 
-                            class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this report?')">
-                            Delete</a></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>No reports have been submitted for this task yet.</p>
-        <?php endif; ?>
-    </div>
+
 
 </body>
 </html>

@@ -36,8 +36,8 @@ $user_list->execute();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="../../src/css/task-list.css">
+    <title>User List</title>
+    <link rel="stylesheet" href="../../src/css/user-list.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -49,9 +49,34 @@ $user_list->execute();
     <h3><a href="task-list.php">TASK LIST</a></h3>
     <h3><a href="user-list.php" class="active">USER LIST</a></h3>
     <h3><a href="profile.php">PROFILE</a></h3>
-    <h3><a href=".php">SIGN OUT</a></h3>
+    <h3><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
 </div>
 
-
+<div class="user-list-wrapper">
+    <div class="user-list">
+        <h2>User List</h2>  
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Fetch all users
+                while ($user = $user_list->fetch(PDO::FETCH_ASSOC)) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($user['id']) . "</td>";
+                    echo "<td>" . htmlspecialchars($user['fullname']) . "</td>";
+                    echo "<td>" . htmlspecialchars($user['role']) . "</td>";
+                    echo "</tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>

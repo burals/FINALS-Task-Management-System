@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    header('Location: index.php?success=task_updated');
+    header('Location: task-list.php?success=task_updated');
     exit;
 }
 ?>
@@ -180,21 +180,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label>Due Time:</label>
         <input type="time" name="due_time" value="<?php echo htmlspecialchars(explode(' ', $task['due_date'])[1]); ?>" required>
         
+    
         <label>Assign to Employees:</label>
-        <div class="checkbox-group">
-            <?php foreach ($employees as $employee): ?>
-                <div>
-                    <input 
-                        type="checkbox" 
-                        id="employee_<?= $employee['id']; ?>" 
-                        name="assigned_employee[]" 
-                        value="<?= $employee['id']; ?>" 
-                        <?= in_array($employee['id'], array_column($currentAssignedEmployees, 'id')) ? 'checked' : ''; ?>
-                    >
-                    <label for="employee_<?= $employee['id']; ?>"><?= htmlspecialchars($employee['fullname']); ?></label>
-                </div>
-            <?php endforeach; ?>
-        </div>
+<select name="assigned_employee[]" multiple size="5" required>
+    <?php foreach ($employees as $employee): ?>
+        <option value="<?= $employee['id']; ?>" 
+            <?= in_array($employee['id'], array_column($currentAssignedEmployees, 'id')) ? 'selected' : ''; ?>>
+            <?= htmlspecialchars($employee['fullname']); ?>
+        </option>
+    <?php endforeach; ?>
+</select>
         
         <label>Status:</label>
         <select name="status" required>
@@ -208,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    class="delete-btn" 
    onclick="return confirm('Are you sure you want to delete this task and all associated reports?');">
    Delete</a>
-    <a href="index.php" class="back-btn">Back</a>
+    <a href="task-list.php" class="back-btn">Back</a>
     </form>
     
 </div>

@@ -36,7 +36,7 @@ body {
     font-weight: bold;
 }
 
-.side-bar h3:last-of-type a{
+.side-bar h3:last-of-type {
     color: #c0392b; /* Red color for the last item (Sign Out) */
 }
 
@@ -73,52 +73,42 @@ body {
     top: 20px;
     margin: 0 auto;
 }
-
-/* Task List Styling */
-.task-list h2 {
-    font-family: 'Roboto', 'Open Sans', Arial, sans-serif; /* Minimalist, clean font stack */
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 2rem;
-    color: #2c3e50;
+/* User List Wrapper */
+.user-list-wrapper {
+    margin: 40px auto; /* Adds space above and centers the box */
+    padding: 20px; /* Adds padding inside the box */
+    background-color: #fff; /* White box background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 10px 10px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    max-width: 800px; /* Medium width for the box */
+    width: 100%; /* Ensures responsiveness */
 }
 
-.task-list {
-    width: 55%; /* Adjusted to utilize remaining space */
-    padding: 20px;
-   
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 10px 10px 12px rgba(20, 0, 10, 0.1);
-    margin-left: 28%; /* Move the task list 25% to the right */
-    margin-top: 20px; /* Add some space to lower the task list */
-    position: relative;
-}
-
-.task-list table {
-    
-    border: #2c3e50;
+/* User List Table Styling */
+.user-list table {
+    width: 100%;
     border-collapse: collapse;
-    margin: 20px auto;
     font-size: 16px;
+    margin-top: 10px; /* Adds space between the header and table */
 }
 
-.task-list th, .task-list td {
+.user-list th, .user-list td {
     padding: 10px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: 1px solid #ddd; /* Light border for cells */
 }
 
-.task-list th {
-    background-color: #2c3e50;
-    color: #fff;
+.user-list th {
+    background-color: #2c3e50; /* Navbar matching color */
+    color: #fff; /* White text for contrast */
+    font-weight: bold;
 }
 
-.task-list tr:nth-child(even) {
-    background-color: #f9f9f9;
+.user-list tr:nth-child(even) {
+    background-color: #f9f9f9; /* Light gray for alternate rows */
 }
 
-.task-list tr:hover {
-    background-color:#e6f2ff;
+.user-list tr:hover {
+    background-color: #e6f2ff; /* Light blue hover effect */
     transition: background-color 0.4s ease, color 0.4s ease;
 }

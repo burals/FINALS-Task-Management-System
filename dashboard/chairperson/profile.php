@@ -72,7 +72,7 @@ $userData = $profile->getUserData($userId);
 
    <!-- Main Content -->
    <div class="content">
-    <h1 class="content-title">Edit Your Profile</h1>
+    <h1 class="content-title">Edit Your Profile</h1><!--  -->
 
     <!-- Form to update profile information -->
     <form action="profile.php" method="POST" enctype="multipart/form-data" class="profile-form">

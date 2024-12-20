@@ -1,5 +1,8 @@
 <?php
-    require_once 'authentication/admin-class.php';
+    include_once '../../database/dbconnection.php';
+    include_once '../admin/authentication/admin-class.php';
+    include_once '../../config/settings-configuration.php';
+   
 
     $admin = new ADMIN();
     if (!$admin->isUserLoggedIn()) {
@@ -44,12 +47,11 @@ $user_list->execute();
 <div class="side-bar">
 <img class="profile-pic" src="profile-picture.jpg" alt="Profile Picture">
 <span class="user-indicator">ADMIN <?= htmlspecialchars($user_data['fullname']); ?></span>
-    <h3><a href="index.php">DASHBOARD</a></h3>
+    <h3><a href="chairperson-dashboard.php">DASHBOARD</a></h3>
     <h3><a href="add-task.php" class="active">ADD TASK</a></h3>
     <h3><a href="task-list.php">TASK LIST</a></h3>
-    <h3><a href="user-list.php">USER LIST</a></h3>
     <h3><a href="profile.php">PROFILE</a></h3>
-    <h3><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
+    <h3><a href="../admin/authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
 </div>
 <div class="container">
     <!-- Left Column: Task Creation Form -->

@@ -67,23 +67,16 @@ textarea {
     min-height: 80px;
 }
 
-input[type="checkbox"] {
-    margin-right: 10px;
+select[multiple] {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    overflow-y: auto;
 }
-
-.checkbox-group {
-    margin-bottom: 15px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.checkbox-group div {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
 /* Button Styles */
 button[type="submit"] {
     width: 100%;

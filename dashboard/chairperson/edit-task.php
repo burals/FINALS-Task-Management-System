@@ -1,76 +1,158 @@
-<?php 
-// Include necessary files
-require_once '../../database/dbconnection.php';
+<?php
 
-// Start session (ensure it exists)
-session_start();
+require_once '../admin/authentication/admin-class.php';
+require_once '../../src/vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require_once '../../src/vendor/phpmailer/phpmailer/src/SMTP.php';
+require_once '../../src/vendor/phpmailer/phpmailer/src/Exception.php';
 
-// Check if user is logged in and authorized as 'chairperson'
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'chairperson') {
-    header("Location: ../../login.php");
-    exit;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+$admin = new ADMIN();
+if (!$admin->isUserLoggedIn()) {
+    $admin->redirect('../../');
 }
 
-// Check if task ID is provided
-$task_id = $_GET['id'] ?? null;
-if (!$task_id) {
-    die("No task ID provided.");
+if (isset($_GET['id'])) {
+    $taskId = $_GET['id'];
+
+    // Fetch task details
+    $stmt = $admin->runQuery("SELECT * FROM tasks WHERE id = :id");
+    $stmt->execute([':id' => $taskId]);
+    $task = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$task) {
+        die('Task not found.');
+    }
+
+    // Fetch the list of employees
+    $employeesStmt = $admin->runQuery("SELECT id, fullname, email FROM user");
+    $employeesStmt->execute();
+    $employees = $employeesStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Get currently assigned employees
+    $assignedStmt = $admin->runQuery("
+        SELECT u.id, u.fullname, u.email 
+        FROM user u
+        JOIN task_assignments ta ON ta.employee_id = u.id
+        WHERE ta.task_id = :task_id
+    ");
+    $assignedStmt->execute([':task_id' => $taskId]);
+    $currentAssignedEmployees = $assignedStmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    die("Task ID not provided.");
 }
 
-// Instantiate the Database class
-$database = new Database();
-$conn = $database->dbConnection();
-
-// Fetch task details
-$query = "
-    SELECT t.*, GROUP_CONCAT(u.id) AS assigned_employee_ids
-    FROM tasks t
-    LEFT JOIN task_assignments ta ON t.id = ta.task_id
-    LEFT JOIN user u ON ta.employee_id = u.id
-    WHERE t.id = ?
-    GROUP BY t.id
-";
-$stmt = $conn->prepare($query);
-$stmt->execute([$task_id]);
-$task = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Handle form submission to update task
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['update_task'])) {
-        $title = $_POST['title'] ?? '';
-        $description = $_POST['description'] ?? '';
-        $due_date = $_POST['due_date'] ?? '';
-        $due_time = $_POST['due_time'] ?? '00:00:00';
-        $status = $_POST['status'] ?? 'Pending';
-        $employee_ids = $_POST['employee_ids'] ?? [];
+    $title = $_POST['title'];
+    $description = $_POST['description'];
+    $dueDate = $_POST['due_date'];
+    $dueTime = $_POST['due_time'];
+    $dueDatetime = $dueDate . ' ' . $dueTime;
+    $newAssignedEmployees = isset($_POST['assigned_employee']) ? $_POST['assigned_employee'] : []; // Array of selected employee IDs
+    $status = $_POST['status'];
 
-        // Combine due date and due time
-        $full_due_date = "$due_date $due_time";
+    if (empty($title) || empty($description) || empty($dueDate) || empty($dueTime)) {
+        echo "<script>alert('All fields are required!'); window.location.href = 'edit-task.php?id=$taskId';</script>";
+        exit;
+    }
 
-        // Update the task
-        $stmt = $conn->prepare("UPDATE tasks SET title = ?, description = ?, due_date = ?, status = ? WHERE id = ?");
-        $stmt->execute([$title, $description, $full_due_date, $status, $task_id]);
+    // Update task information
+    $updateStmt = $admin->runQuery("
+        UPDATE tasks SET title = :title, description = :description, due_date = :due_date, status = :status 
+        WHERE id = :id
+    ");
+    $updateStmt->execute([
+        ':title' => $title,
+        ':description' => $description,
+        ':due_date' => $dueDatetime,
+        ':status' => $status,
+        ':id' => $taskId
+    ]);
 
-        // Update task assignments
-        $conn->prepare("DELETE FROM task_assignments WHERE task_id = ?")->execute([$task_id]);
-        foreach ($employee_ids as $employee_id) {
-            $conn->prepare("INSERT INTO task_assignments (task_id, employee_id) VALUES (?, ?)")->execute([$task_id, $employee_id]);
+    // Identify removed employees
+    $removedEmployees = [];
+    foreach ($currentAssignedEmployees as $employee) {
+        if (!in_array($employee['id'], $newAssignedEmployees)) {
+            $removedEmployees[] = $employee;
         }
-
-        // Redirect with success message
-        header("Location: chairperson-dashboard.php?message=Task updated successfully!");
-        exit;
     }
 
-    if (isset($_POST['delete_task'])) {
-        // Delete the task
-        $conn->prepare("DELETE FROM tasks WHERE id = ?")->execute([$task_id]);
-        $conn->prepare("DELETE FROM task_assignments WHERE task_id = ?")->execute([$task_id]);
+    // Identify newly assigned employees using array_diff
+    $newlyAssignedEmployees = array_diff($newAssignedEmployees, array_column($currentAssignedEmployees, 'id'));
 
-        // Redirect after deletion
-        header("Location: chairperson-dashboard.php?message=Task deleted successfully!");
-        exit;
+    // Send email to removed employees
+    foreach ($removedEmployees as $employee) {
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.example.com'; // Replace with your SMTP server
+            $mail->SMTPAuth = true;
+            $mail->Username = 'wrenchnerbangit@gmail.com'; // Replace with your email
+            $mail->Password = 'zapq uiqd mdjn axss'; // Replace with your email password
+            $mail->SMTPSecure = "tls";
+            $mail->Port = 587;
+
+            // Email content
+            $mail->setFrom('wrenchnerbangit@gmail.com', 'CCS Task Management System');
+            $mail->addAddress($employee['email'], $employee['fullname']);
+            $mail->Subject = 'Task Update Notification';
+            $mail->Body = "Dear {$employee['fullname']},\n\nYou have been removed from the task: {$task['title']}.\n\nRegards,\n CCS Task Management Team";
+
+            $mail->send();
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
     }
+
+    // Send email to newly assigned employees
+    foreach ($newlyAssignedEmployees as $employeeId) {
+        $stmtEmployee = $admin->runQuery("SELECT email, fullname FROM user WHERE id = :id");
+        $stmtEmployee->execute([':id' => $employeeId]);
+        $employee = $stmtEmployee->fetch(PDO::FETCH_ASSOC);
+
+        if ($employee) {
+            $mail = new PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host = 'smtp.example.com'; // Replace with your SMTP server
+                $mail->SMTPAuth = true;
+                $mail->Username = 'wrenchnerbangit@gmail.com'; // Replace with your email
+                $mail->Password = 'zapq uiqd mdjn axss'; // Replace with your email password
+                $mail->SMTPSecure = "tls";
+                $mail->Port = 587;
+
+                // Email content
+                $mail->setFrom('wrenchnerbangit@gmail.com', 'CCS Task Management System');
+                $mail->addAddress($employee['email'], $employee['fullname']);
+                $mail->Subject = 'Task Update Notification';
+                $mail->Body = "Dear {$employee['fullname']},\n\nYou have been assigned a new task: {$task['title']}.\n\nRegards,\n CCS Task Management Team";
+
+                $mail->send();
+            } catch (Exception $e) {
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
+        }
+    }
+
+    // Remove old assignments
+    $deleteStmt = $admin->runQuery("DELETE FROM task_assignments WHERE task_id = :task_id");
+    $deleteStmt->execute([':task_id' => $taskId]);
+
+    // Add new assignments
+    if (!empty($newAssignedEmployees)) {
+        $assignStmt = $admin->runQuery("INSERT INTO task_assignments (task_id, employee_id) VALUES (:task_id, :employee_id)");
+        foreach ($newAssignedEmployees as $employeeId) {
+            $assignStmt->execute([
+                ':task_id' => $taskId,
+                ':employee_id' => $employeeId
+            ]);
+        }
+    }
+
+    header('Location: task-list.php?success=task_updated');
+    exit;
 }
 ?>
 
@@ -83,52 +165,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../../src/css/edit.css">
 </head>
 <body>
-    <div class="form-container">
-        <h2>Edit Task: <?= htmlspecialchars($task['title'] ?? 'Unknown Task') ?></h2>
+<div class="form-container">
+    <h2>Edit Task: <?= htmlspecialchars($task['title'] ?? 'Unknown Task') ?></h2>
+    <form method="POST">
+        <label>Title:</label>
+        <input type="text" name="title" value="<?php echo htmlspecialchars($task['title']); ?>" required>
+        
+        <label>Description:</label>
+        <textarea name="description" required><?php echo htmlspecialchars($task['description']); ?></textarea>
+        
+        <label>Due Date:</label>
+        <input type="date" name="due_date" value="<?php echo htmlspecialchars(explode(' ', $task['due_date'])[0]); ?>" required>
+        
+        <label>Due Time:</label>
+        <input type="time" name="due_time" value="<?php echo htmlspecialchars(explode(' ', $task['due_date'])[1]); ?>" required>
+        
+        <label>Assign to Employees:</label>
+        <select name="assigned_employee[]" multiple size="5" required>
+    <?php foreach ($employees as $employee): ?>
+        <option value="<?= $employee['id']; ?>" 
+            <?= in_array($employee['id'], array_column($currentAssignedEmployees, 'id')) ? 'selected' : ''; ?>>
+            <?= htmlspecialchars($employee['fullname']); ?>
+        </option>
+    <?php endforeach; ?>
+</select>
 
-        <form method="POST">
-            <label for="title">Title</label>
-            <input type="text" id="title" name="title" value="<?= htmlspecialchars($task['title'] ?? '') ?>" required>
-
-            <label for="description">Description</label>
-            <textarea id="description" name="description" required><?= htmlspecialchars($task['description'] ?? '') ?></textarea>
-
-            <label for="due_date">Due Date</label>
-            <input type="date" id="due_date" name="due_date" value="<?= htmlspecialchars(explode(' ', $task['due_date'])[0] ?? '') ?>" required>
-
-            <label for="due_time">Due Time</label>
-            <input type="time" id="due_time" name="due_time" value="<?= htmlspecialchars(explode(' ', $task['due_date'])[1] ?? '00:00:00') ?>" required>
-
-
-            <label for="employee_ids">Assign Employees</label>
-            <select id="employee_ids" name="employee_ids[]" multiple>
-                <?php
-                $employees = $conn->query("SELECT id, fullname FROM user")->fetchAll(PDO::FETCH_ASSOC);
-                $assigned_employee_ids = explode(',', $task['assigned_employee_ids'] ?? '');
-                foreach ($employees as $employee) {
-                    $selected = in_array($employee['id'], $assigned_employee_ids) ? 'selected' : '';
-                    echo "<option value=\"{$employee['id']}\" $selected>{$employee['fullname']}</option>";
-                }
-                ?>
-            
-            </select>
-
-            <label for="status">Status</label>
-            <select id="status" name="status">
-                <option value="Pending" <?= ($task['status'] === 'Pending') ? 'selected' : '' ?>>Pending</option>
-                <option value="In Progress" <?= ($task['status'] === 'In Progress') ? 'selected' : '' ?>>In Progress</option>
-                <option value="Completed" <?= ($task['status'] === 'Completed') ? 'selected' : '' ?>>Completed</option>
-            </select>
-
-            <button type="submit" name="update_task" class="btn btn-success">Update Task</button>
-            <a href="delete-task.php?task_id=<?= htmlspecialchars($task['id']); ?>" 
+        <label>Status:</label>
+        <select name="status" required>
+            <option value="Pending" <?php if ($task['status'] == 'Pending') echo 'selected'; ?>>Pending</option>
+            <option value="In Progress" <?php if ($task['status'] == 'In Progress') echo 'selected'; ?>>In Progress</option>
+            <option value="Completed" <?php if ($task['status'] == 'Completed') echo 'selected'; ?>>Completed</option>
+        </select>
+        
+        <button type="submit">Update Task</button>
+        <a href="delete-task.php?task_id=<?= htmlspecialchars($task['id']); ?>" 
    class="delete-btn" 
    onclick="return confirm('Are you sure you want to delete this task and all associated reports?');">
    Delete</a>
-            <a href="chairperson-dashboard.php" class="back-btn">Back</a>
-        </form>
-        
-     
-    </div>
+    <a href="task-list.php" class="back-btn">Back</a>
+    </form>
+    
+</div>
 </body>
+
 </html>

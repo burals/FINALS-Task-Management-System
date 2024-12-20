@@ -15,7 +15,7 @@ body {
 /* Sidebar styling */
 .side-bar {
     background-color: #2c3e50;
-    width: 15%;
+    width: 250px;
     height: 100vh;
     color: #ffffff; /* Set text color for better contrast */
     padding: 20px;
@@ -97,8 +97,9 @@ body {
 /* Container for Two-Column Layout */
 .container {
     padding-top: 100px; /* Space for fixed navbar */
+    margin-top: 50px;
     margin-left: 30%; /* Increased margin-left to move the container more to the right */
-    width: 70%; /* Increased width to make the container wider */
+    width: 140%; /* Increased width to make the container wider */
     position: relative;
 }
 
@@ -129,23 +130,20 @@ form input, form select, form textarea, form button {
     font-family: 'Roboto', 'Open Sans', Arial, sans-serif;
 }
 
-/* Checkbox Group Styling */
-.checkbox-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.checkbox-group div {
-    display: flex;
-    align-items: center;
-}
-
-.checkbox-group label {
-    margin-left: 5px;
-    font-family: 'Roboto', Arial, sans-serif;
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     font-size: 14px;
-    color: #333;
+    background-color: #fff;
+    margin-bottom: 10px;
+    height: auto; /* Adjusts height for multi-selection */
+}
+
+select[multiple] {
+    height: 120px; /* Default height for multi-selection */
+    overflow-y: auto;
 }
 
 /* Button Styling for Form */

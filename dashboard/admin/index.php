@@ -11,7 +11,37 @@
     $stmt->execute(array(":id" => $_SESSION['adminSession']));
     $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    
+    // Fetch key metrics
+$total_users_stmt = $admin->runQuery("SELECT COUNT(*) AS total_users FROM user WHERE status = 'active'");
+$total_users_stmt->execute();
+$total_users = $total_users_stmt->fetch(PDO::FETCH_ASSOC)['total_users'];
+
+$total_tasks_stmt = $admin->runQuery("SELECT COUNT(*) AS total_tasks FROM tasks");
+$total_tasks_stmt->execute();
+$total_tasks = $total_tasks_stmt->fetch(PDO::FETCH_ASSOC)['total_tasks'];
+
+$completed_tasks_stmt = $admin->runQuery("SELECT COUNT(*) AS completed_tasks FROM tasks WHERE status = 'completed'");
+$completed_tasks_stmt->execute();
+$completed_tasks = $completed_tasks_stmt->fetch(PDO::FETCH_ASSOC)['completed_tasks'];
+
+// Fetch recent tasks based on updated_at
+$recent_tasks_stmt = $admin->runQuery("
+    SELECT title, description, status, updated_at 
+    FROM tasks 
+    ORDER BY updated_at DESC 
+    LIMIT 4
+");
+$recent_tasks_stmt->execute();
+$recent_tasks = $recent_tasks_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$pending_tasks_stmt = $admin->runQuery("
+SELECT COUNT(*) AS pending_count 
+FROM tasks 
+WHERE status = 'pending'
+");
+$pending_tasks_stmt->execute();
+$pending_count = $pending_tasks_stmt->fetch(PDO::FETCH_ASSOC)['pending_count'];
+
     // Fetch task data and assigned employees
     $tasks = $admin->runQuery("
         SELECT t.*, 
@@ -47,7 +77,50 @@
     <h3><a href="task-list.php">TASK LIST</a></h3>
     <h3><a href="user-list.php">USER LIST</a></h3>
     <h3><a href="profile.php">PROFILE</a></h3>
-    <h3><a href="../admin/authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
+    <h3><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
     </div>
+   
+    <div class="content">
+    <h1>Welcome, <?= htmlspecialchars($user_data['fullname']); ?>!</h1>
+    <p>Today's Date: <?= date("F j, Y"); ?></p>
+
+    <!-- Key Metrics Section -->
+    <div class="metrics">
+        <div class="metric-card">
+            <h2>Total Users</h2>
+            <p><?= $total_users; ?></p>
+        </div>
+        <div class="metric-card">
+            <h2>Total Tasks</h2>
+            <p><?= $total_tasks; ?></p>
+        </div>
+        <div class="metric-card">
+            <h2>Completed Tasks</h2>
+            <p><?= $completed_tasks; ?></p>
+        </div>
+        <div class="metric-cards">
+    <div class="metric-card">
+        <h2>Pending Tasks</h2>
+        <p><?= $pending_count; ?></p>
+    </div>
+</div>
+
+    </div>
+
+    <!-- Recent Activities Section -->
+    <h2>Recent Activities</h2>
+    <div class="recent-activities">
+
+<ul>
+    <?php foreach ($recent_tasks as $task): ?>
+        <li>
+            <strong>Task:</strong> <?= htmlspecialchars($task['title']); ?> - 
+            <strong>Status:</strong> <?= htmlspecialchars($task['status']); ?> <br>
+            <strong>Updated:</strong> <?= date("F j, Y, g:i a", strtotime($task['updated_at'])); ?>
+        </li>
+    <?php endforeach; ?>
+</ul></div>
+</div>
+
 </body>
 </html>
