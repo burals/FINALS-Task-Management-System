@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2024 at 01:44 PM
+-- Generation Time: Dec 20, 2024 at 01:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `itelec3`
+-- Database: `itelec3-v2`
 --
 
 -- --------------------------------------------------------
@@ -164,24 +164,19 @@ INSERT INTO `logs` (`id`, `user_id`, `activity`, `created_at`) VALUES
 (295, 52, 'Has successfully signed in.', '2024-12-19 10:09:54'),
 (296, 57, 'Has successfully signed in.', '2024-12-19 10:10:33'),
 (297, 57, 'Has successfully signed in.', '2024-12-19 10:13:19'),
-(298, 57, 'Has successfully signed in.', '2024-12-20 11:14:54'),
-(299, 51, 'Has successfully signed in.', '2024-12-20 11:15:00'),
-(300, 52, 'Has successfully signed in.', '2024-12-20 11:16:46'),
-(301, 57, 'Has successfully signed in.', '2024-12-20 11:16:55'),
-(302, 52, 'Has successfully signed in.', '2024-12-20 11:19:43'),
-(303, 51, 'Has successfully signed in.', '2024-12-20 11:20:50'),
-(304, 52, 'Has successfully signed in.', '2024-12-20 12:06:04'),
-(305, 52, 'Has successfully signed in.', '2024-12-20 12:07:48'),
-(306, 51, 'Has successfully signed in.', '2024-12-20 12:15:25'),
-(307, 52, 'Has successfully signed in.', '2024-12-20 12:19:46'),
-(308, 51, 'Has successfully signed in.', '2024-12-20 12:27:31'),
-(309, 57, 'Has successfully signed in.', '2024-12-20 12:28:59'),
-(310, 57, 'Has successfully signed in.', '2024-12-20 12:29:59'),
-(311, 51, 'Has successfully signed in.', '2024-12-20 12:30:05'),
-(312, 53, 'Has successfully signed in.', '2024-12-20 12:31:05'),
-(313, 51, 'Has successfully signed in.', '2024-12-20 12:34:35'),
-(314, 57, 'Has successfully signed in.', '2024-12-20 12:35:03'),
-(315, 51, 'Has successfully signed in.', '2024-12-20 12:43:33');
+(298, 57, 'Has successfully signed in.', '2024-12-19 10:27:35'),
+(299, 57, 'Has successfully signed in.', '2024-12-19 11:21:45'),
+(300, 51, 'Has successfully signed in.', '2024-12-19 11:41:46'),
+(301, 57, 'Has successfully signed in.', '2024-12-19 11:42:57'),
+(302, 57, 'Has successfully signed in.', '2024-12-19 11:44:11'),
+(303, 51, 'Has successfully signed in.', '2024-12-19 11:45:40'),
+(304, 57, 'Has successfully signed in.', '2024-12-19 11:49:43'),
+(305, 57, 'Has successfully signed in.', '2024-12-19 12:04:24'),
+(306, 57, 'Has successfully signed in.', '2024-12-19 12:05:35'),
+(307, 53, 'Has successfully signed in.', '2024-12-19 12:12:02'),
+(308, 53, 'Has successfully signed in.', '2024-12-19 12:12:26'),
+(309, 53, 'Has successfully signed in.', '2024-12-19 12:13:01'),
+(310, 57, 'Has successfully signed in.', '2024-12-19 12:19:06');
 
 -- --------------------------------------------------------
 
@@ -202,7 +197,7 @@ CREATE TABLE `reports` (
 --
 
 INSERT INTO `reports` (`id`, `user_id`, `task_id`, `content`, `created_at`) VALUES
-(1, 57, 22, '213121225215545541151', '2024-12-20 12:43:21');
+(3, 57, 22, 'network files is ....', '2024-12-19 11:57:23');
 
 -- --------------------------------------------------------
 
@@ -218,18 +213,19 @@ CREATE TABLE `tasks` (
   `assigned_employee` int(11) DEFAULT NULL,
   `status` enum('pending','in progress','completed') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `has_documents` tinyint(1) DEFAULT 0,
+  `has_reports` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tasks`
 --
 
-INSERT INTO `tasks` (`id`, `title`, `description`, `due_date`, `assigned_employee`, `status`, `created_at`, `updated_at`) VALUES
-(18, '1', '2', '2024-12-12', NULL, 'in progress', '2024-11-24 18:51:19', '2024-11-24 18:52:41'),
-(22, '123', '2321', '2025-12-12', NULL, 'completed', '2024-12-08 13:41:21', '2024-12-20 12:35:15'),
-(23, '123', '321', '2024-12-17', NULL, 'pending', '2024-12-15 15:57:59', '2024-12-15 15:57:59'),
-(24, 'Networking', 'add the net.docs here', '2024-12-26', NULL, 'pending', '2024-12-19 11:42:20', '2024-12-19 11:42:20');
+INSERT INTO `tasks` (`id`, `title`, `description`, `due_date`, `assigned_employee`, `status`, `created_at`, `updated_at`, `has_documents`, `has_reports`) VALUES
+(18, '1', '2', '2024-12-12', 53, 'in progress', '2024-11-24 18:51:19', '2024-12-19 12:12:16', 0, 0),
+(22, '123', '2321', '2025-12-12', NULL, 'completed', '2024-12-08 13:41:21', '2024-12-19 11:57:23', 0, 0),
+(23, '123', '321', '2024-12-17', 57, 'pending', '2024-12-15 15:57:59', '2024-12-19 11:44:26', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -251,8 +247,7 @@ INSERT INTO `task_assignments` (`id`, `task_id`, `employee_id`) VALUES
 (20, 18, 51),
 (21, 18, 52),
 (25, 22, 57),
-(26, 23, 57),
-(27, 24, 57);
+(26, 23, 57);
 
 -- --------------------------------------------------------
 
@@ -273,9 +268,7 @@ CREATE TABLE `task_documents` (
 --
 
 INSERT INTO `task_documents` (`id`, `task_id`, `user_id`, `file_path`, `uploaded_at`) VALUES
-(1, 22, 57, '../uploads/57/documents/470220737_612769857942301_101085759315193306_n.jpg', '2024-12-20 12:42:36'),
-(2, 22, 57, '../uploads/57/documents/f8eaaf54-977c-47df-8443-defea7d41ed7.jpg', '2024-12-20 12:42:46'),
-(3, 22, 57, '../uploads/57/documents/f8eaaf54-977c-47df-8443-defea7d41ed7.jpg', '2024-12-20 12:43:21');
+(4, 22, 57, '../uploads/57/documents/FINALS_NET.doc', '2024-12-19 11:57:23');
 
 -- --------------------------------------------------------
 
@@ -293,18 +286,19 @@ CREATE TABLE `user` (
   `status` enum('not_active','active') NOT NULL DEFAULT 'active',
   `tokencode` varchar(400) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `role` enum('admin','users','chairperson') NOT NULL DEFAULT 'users'
+  `role` enum('admin','users','chairperson') NOT NULL DEFAULT 'users',
+  `profile_picture` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `fullname`, `email`, `password`, `reset_token`, `token_expiry`, `status`, `tokencode`, `created_at`, `role`) VALUES
-(51, 'DEAN Seth', 'sthlgns@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-24 10:49:30', 'admin'),
-(52, 'TEACHER Ken', 'jthrlgns@gmail.com', '123', NULL, NULL, 'active', NULL, '2024-11-24 12:21:31', 'chairperson'),
-(53, 'TEACHER James', 'brighthing2003@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-24 18:35:52', 'chairperson'),
-(57, 'Wrenchner', 'kairuschan@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-12-06 12:53:04', 'users');
+INSERT INTO `user` (`id`, `fullname`, `email`, `password`, `reset_token`, `token_expiry`, `status`, `tokencode`, `created_at`, `role`, `profile_picture`) VALUES
+(51, 'DEAN Seth', 'sthlgns@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-24 10:49:30', 'admin', NULL),
+(52, 'TEACHER Ken', 'jthrlgns@gmail.com', '123', NULL, NULL, 'active', NULL, '2024-11-24 12:21:31', 'chairperson', NULL),
+(53, 'TEACHER James', 'brighthing2003@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-11-24 18:35:52', 'chairperson', NULL),
+(57, 'wrench', 'kairuschan@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'active', NULL, '2024-12-06 12:53:04', 'users', 'profile.jpg');
 
 --
 -- Indexes for dumped tables
@@ -322,8 +316,8 @@ ALTER TABLE `logs`
 --
 ALTER TABLE `reports`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `task_id` (`task_id`);
+  ADD KEY `task_id` (`task_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `tasks`
@@ -362,31 +356,31 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(14) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=316;
+  MODIFY `id` int(14) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=311;
 
 --
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `task_assignments`
 --
 ALTER TABLE `task_assignments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `task_documents`
 --
 ALTER TABLE `task_documents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -408,8 +402,8 @@ ALTER TABLE `logs`
 -- Constraints for table `reports`
 --
 ALTER TABLE `reports`
-  ADD CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `reports_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reports_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `tasks`
