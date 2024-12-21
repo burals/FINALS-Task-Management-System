@@ -1,49 +1,66 @@
 <?php
-include_once 'update-profile.php';
+require_once '../../database/dbconnection.php';
 require_once '../admin/authentication/admin-class.php';
+require_once 'update-profile.php';
 
-// Instantiate the admin object and check if the user is logged in
-$admin = new ADMIN();
-if (!$admin->isUserLoggedIn()) {
-    $admin->redirect('../../');
-}
+class ProfilePage
+{
+    private $admin;
+    private $profile;
+    private $userId;
+    private $userData;
 
-// Get the logged-in user's ID from the session
-$userId = $_SESSION['adminSession'];
-$profile = new Profile($admin);
+    public function __construct()
+    {
+        $this->admin = new ADMIN();
+        if (!$this->admin->isUserLoggedIn()) {
+            $this->admin->redirect('../../');
+        }
 
-// If the form is submitted via POST request
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $fullname = $_POST['fullname'];
-    $email = $_POST['email'];
-    $profilePicture = null;
-
-   // Define the profile picture path (assuming it's stored in the 'uploads/{user_id}/profile.jpg')
-$profilePicturePath = "../uploads/" . $user_data['id'] . "/profile.jpg";
-
-// Check if the profile picture exists, otherwise use a default image
-if (!file_exists($profilePicturePath)) {
-    $profilePicturePath = "default-profile.jpg"; // Set your default profile picture
-}
-
-    // Update the user's details in the database
-    $profile->updateUserData($userId, $fullname, $email, $profilePicture);
-
-    // Handle password change if a new password is entered
-    if (!empty($_POST['new_password'])) {
-        $newPassword = $_POST['new_password'];
-        $profile->changePassword($userId, $newPassword);
+        $this->userId = $_SESSION['adminSession'];
+        $this->profile = new Profile($this->admin);
+        $this->userData = $this->profile->getUserData($this->userId);
     }
 
-    // Redirect back to the profile page after successful update
-    header("Location: profile.php");
-    exit;
-}
+    public function handleFormSubmission()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $fullname = $_POST['fullname'];
+            $email = $_POST['email'];
+            $profilePicture = null;
 
-// Fetch the current user data
-$userData = $profile->getUserData($userId);
-?>
+            if (!empty($_FILES['profile_picture']['tmp_name'])) {
+                $uploadResult = $this->profile->uploadProfilePicture($_FILES['profile_picture'], $this->userId);
+                if ($uploadResult === "profile.jpg") {
+                    $profilePicture = $uploadResult;
+                } else {
+                    echo $uploadResult;  // Display error if upload fails
+                }
+            }
 
+            $this->profile->updateUserData($this->userId, $fullname, $email, $profilePicture);
+
+            if (!empty($_POST['new_password'])) {
+                $this->profile->changePassword($this->userId, $_POST['new_password']);
+            }
+
+            header("Location: profile.php");
+            exit;
+        }
+    }
+
+    public function render()
+    {
+        $profilePicture = "../uploads/{$this->userId}/profile.jpg";
+        if (!file_exists($profilePicture)) {
+            $profilePicture = "default-profile.jpg";  // Fallback to default if no custom profile picture
+        }
+
+        $fullname = htmlspecialchars($this->userData['fullname']);
+        $email = htmlspecialchars($this->userData['email']);
+        $role = strtoupper($this->userData['role']);
+
+        echo <<<HTML
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,55 +74,44 @@ $userData = $profile->getUserData($userId);
 </head>
 
 <body>
+    <div class="side-bar">
+        <img class="profile-pic" src="$profilePicture" alt="Profile Picture">
+        <span class="user-indicator">$role $fullname</span>
+        <h3><a href="chairperson-dashboard.php">DASHBOARD</a></h3>
+        <h3><a href="add-task.php">ADD TASK</a></h3>
+        <h3><a href="task-list.php">TASK LIST</a></h3>
+        <h3><a href="profile.php">PROFILE</a></h3>
+        <h3><a href="../admin/authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
+    </div>
 
-   <!-- Sidebar -->
-   <div class="side-bar">
-   <img class="profile-pic" src="profile-picture.jpg" alt="Profile Picture">
-   <span class="user-indicator"><?= strtoupper($userData['role']) ?> <?= htmlspecialchars($userData['fullname']); ?></span>
-   <h3><a href="chairperson-dashboard.php" >DASHBOARD</a></h3>
-    <h3><a href="add-task.php">ADD TASK</a></h3>
-    <h3><a href="task-list.php">TASK LIST</a></h3>
-    <h3><a href="profile.php" class="active">PROFILE </a></h3>
-    <h3><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
-   </div>
-
-   <!-- Main Content -->
-   <div class="content">
-    <h1 class="content-title">Edit Your Profile</h1><!--  -->
-
-    <!-- Form to update profile information -->
-    <form action="profile.php" method="POST" enctype="multipart/form-data" class="profile-form">
-        <!-- Profile Picture -->
-        <div class="form-group">
-            <label for="profile_picture" class="form-label">Profile Picture</label>
-            <input type="file" name="profile_picture" class="form-input" accept="image/*">
-        </div>
-
-        <!-- Fullname -->
-        <div class="form-group">
-            <label for="fullname" class="form-label">Full Name</label>
-            <input type="text" name="fullname" class="form-input" value="<?php echo $userData['fullname']; ?>" required>
-        </div>
-
-        <!-- Email -->
-        <div class="form-group">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" name="email" class="form-input" value="<?php echo $userData['email']; ?>" required>
-        </div>
-
-        <!-- Password Change (optional) -->
-        <div class="form-group">
-            <label for="new_password" class="form-label">New Password (optional)</label>
-            <input type="password" name="new_password" class="form-input" placeholder="New Password (optional)">
-        </div>
-
-        <!-- Submit Button -->
-        <button type="submit" class="form-button">Update Profile</button>
-    </form>
-</div>
-
-   </div>
-
+    <div class="content">
+        <h1 class="content-title">Edit Your Profile</h1>
+        <form action="profile.php" method="POST" enctype="multipart/form-data" class="profile-form">
+            <div class="form-group">
+                <label for="profile_picture" class="form-label">Profile Picture</label>
+                <input type="file" name="profile_picture" class="form-input" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="fullname" class="form-label">Full Name</label>
+                <input type="text" name="fullname" class="form-input" value="$fullname" required>
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" name="email" class="form-input" value="$email" required>
+            </div>
+            <div class="form-group">
+                <label for="new_password" class="form-label">New Password (optional)</label>
+                <input type="password" name="new_password" class="form-input" placeholder="New Password (optional)">
+            </div>
+            <button type="submit" class="form-button">Update Profile</button>
+        </form>
+    </div>
 </body>
-
 </html>
+HTML;
+    }
+}
+
+$page = new ProfilePage();
+$page->handleFormSubmission();
+$page->render();

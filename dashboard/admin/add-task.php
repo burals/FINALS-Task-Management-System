@@ -1,34 +1,39 @@
 <?php
-    require_once 'authentication/admin-class.php';
+require_once 'authentication/admin-class.php';
 
-    $admin = new ADMIN();
-    if (!$admin->isUserLoggedIn()) {
-        $admin->redirect('../../');
-    }
+$admin = new ADMIN();
+if (!$admin->isUserLoggedIn()) {
+    $admin->redirect('../../');
+}
 
-    // Fetch user data
-    $stmt = $admin->runQuery("SELECT * FROM user WHERE id = :id");
-    $stmt->execute(array(":id" => $_SESSION['adminSession']));
-    $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+// Fetch user data
+$stmt = $admin->runQuery("SELECT * FROM user WHERE id = :id");
+$stmt->execute(array(":id" => $_SESSION['adminSession']));
+$user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Fetch task data and assigned employees
-    $tasks = $admin->runQuery("
+// Set profile picture path (check if a profile picture exists)
+$profilePicturePath = "../uploads/" . $_SESSION['adminSession'] . "/profile.jpg";
+if (!file_exists($profilePicturePath)) {
+    $profilePicturePath = "profile-picture.jpg"; // Fallback if no profile picture is set
+}
+
+// Fetch task data and assigned employees
+$tasks = $admin->runQuery("
     SELECT t.*, 
            GROUP_CONCAT(u.fullname SEPARATOR ', ') AS assigned_employees
     FROM tasks t
     LEFT JOIN task_assignments ta ON t.id = ta.task_id
     LEFT JOIN user u ON ta.employee_id = u.id
     GROUP BY t.id
-    ");
-    $tasks->execute();
+");
+$tasks->execute();
 
-    $user_list = $admin->runQuery("SELECT id, fullname, role FROM user");
+$user_list = $admin->runQuery("SELECT id, fullname, role FROM user");
 $user_list->execute();
-    // Fetch all employees for the task creation form
-    $employees = $admin->runQuery("SELECT * FROM user");
-    $employees->execute();
 
-    
+// Fetch all employees for the task creation form
+$employees = $admin->runQuery("SELECT * FROM user");
+$employees->execute();
 ?>
 
 <!DOCTYPE html>
@@ -42,8 +47,8 @@ $user_list->execute();
 </head>
 <body>
 <div class="side-bar">
-<img class="profile-pic" src="profile-picture.jpg" alt="Profile Picture">
-<span class="user-indicator">ADMIN <?= htmlspecialchars($user_data['fullname']); ?></span>
+    <img class="profile-pic" src="<?= $profilePicturePath; ?>" alt="Profile Picture">
+    <span class="user-indicator">ADMIN <?= htmlspecialchars($user_data['fullname']); ?></span>
     <h3><a href="index.php">DASHBOARD</a></h3>
     <h3><a href="add-task.php" class="active">ADD TASK</a></h3>
     <h3><a href="task-list.php">TASK LIST</a></h3>
@@ -65,37 +70,38 @@ $user_list->execute();
                 <textarea id="description" name="description" placeholder="Enter task description" required></textarea>
             </div>
             <div class="form-group">
-    <label for="due_date">Due Date</label>
-    <input type="date" id="due_date" name="due_date" required>
-    <label for="due_time">Time</label>
-    <input type="time" id="due_time" name="due_time" required>
-</div>
+                <label for="due_date">Due Date</label>
+                <input type="date" id="due_date" name="due_date" required>
+                <label for="due_time">Time</label>
+                <input type="time" id="due_time" name="due_time" required>
+            </div>
 
-<div class="form-group">
-    <label for="assign_employee">Assign to Employees</label>
-    <select id="assign_employee" name="employee_ids[]" multiple required>
-        <?php while ($employee = $employees->fetch(PDO::FETCH_ASSOC)): ?>
-            <option value="<?= $employee['id']; ?>"><?= htmlspecialchars($employee['fullname']); ?></option>
-        <?php endwhile; ?>
-    </select>
-</div>
+            <div class="form-group">
+                <label for="assign_employee">Assign to Employees</label>
+                <select id="assign_employee" name="employee_ids[]" multiple required>
+                    <?php while ($employee = $employees->fetch(PDO::FETCH_ASSOC)): ?>
+                        <option value="<?= $employee['id']; ?>"><?= htmlspecialchars($employee['fullname']); ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
 
             <button type="submit" class="btn-submit">Create Task</button>
         </form>
     </div>
 
-<div class="feedback">
-    <?php if (isset($_GET['success'])): ?>
-        <?php if ($_GET['success'] == 'task_updated'): ?>
-            <div class="alert success">Task updated successfully!</div>
-        <?php elseif ($_GET['success'] == 'task_deleted'): ?>
-            <div class="alert success">Task deleted successfully!</div>
-        <?php elseif ($_GET['success'] == 'task_created'): ?>
-            <div class="alert success">Task created successfully!</div>
+    <div class="feedback">
+        <?php if (isset($_GET['success'])): ?>
+            <?php if ($_GET['success'] == 'task_updated'): ?>
+                <div class="alert success">Task updated successfully!</div>
+            <?php elseif ($_GET['success'] == 'task_deleted'): ?>
+                <div class="alert success">Task deleted successfully!</div>
+            <?php elseif ($_GET['success'] == 'task_created'): ?>
+                <div class="alert success">Task created successfully!</div>
+            <?php endif; ?>
+        <?php elseif (isset($_GET['error'])): ?>
+            <div class="alert error"><?= htmlspecialchars($_GET['error']); ?></div>
         <?php endif; ?>
-    <?php elseif (isset($_GET['error'])): ?>
-        <div class="alert error"><?= htmlspecialchars($_GET['error']); ?></div>
-    <?php endif; ?>
+    </div>
 </div>
 
 </body>

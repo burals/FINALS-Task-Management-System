@@ -1,6 +1,6 @@
 <?php
 
-require_once '../admin/authentication/admin-class.php';
+require_once 'authentication/admin-class.php';
 require_once '../../src/vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require_once '../../src/vendor/phpmailer/phpmailer/src/SMTP.php';
 require_once '../../src/vendor/phpmailer/phpmailer/src/Exception.php';
@@ -180,8 +180,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label>Due Time:</label>
         <input type="time" name="due_time" value="<?php echo htmlspecialchars(explode(' ', $task['due_date'])[1]); ?>" required>
         
+    
         <label>Assign to Employees:</label>
-        <select name="assigned_employee[]" multiple size="5" required>
+<select name="assigned_employee[]" multiple size="5" required>
     <?php foreach ($employees as $employee): ?>
         <option value="<?= $employee['id']; ?>" 
             <?= in_array($employee['id'], array_column($currentAssignedEmployees, 'id')) ? 'selected' : ''; ?>>
@@ -189,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </option>
     <?php endforeach; ?>
 </select>
-
+        
         <label>Status:</label>
         <select name="status" required>
             <option value="Pending" <?php if ($task['status'] == 'Pending') echo 'selected'; ?>>Pending</option>

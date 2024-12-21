@@ -1,34 +1,41 @@
 <?php
-    require_once 'authentication/admin-class.php';
+require_once 'authentication/admin-class.php';
 
-    $admin = new ADMIN();
-    if (!$admin->isUserLoggedIn()) {
-        $admin->redirect('../../');
-    }
+$admin = new ADMIN();
+if (!$admin->isUserLoggedIn()) {
+    $admin->redirect('../../');
+}
 
-    // Fetch user data
-    $stmt = $admin->runQuery("SELECT * FROM user WHERE id = :id");
-    $stmt->execute(array(":id" => $_SESSION['adminSession']));
-    $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+// Fetch user data
+$stmt = $admin->runQuery("SELECT * FROM user WHERE id = :id");
+$stmt->execute(array(":id" => $_SESSION['adminSession']));
+$user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Fetch task data and assigned employees
-    $tasks = $admin->runQuery("
-    SELECT t.*, 
-           GROUP_CONCAT(u.fullname SEPARATOR ', ') AS assigned_employees
-    FROM tasks t
-    LEFT JOIN task_assignments ta ON t.id = ta.task_id
-    LEFT JOIN user u ON ta.employee_id = u.id
-    GROUP BY t.id
-    ");
-    $tasks->execute();
+// Set profile picture path (check if a profile picture exists)
+$profilePicturePath = "../uploads/" . $_SESSION['adminSession'] . "/profile.jpg";
+if (!file_exists($profilePicturePath)) {
+    $profilePicturePath = "profile-picture.jpg"; // Fallback if no profile picture is set
+}
 
-    $user_list = $admin->runQuery("SELECT id, fullname, role FROM user");
+// Fetch task data and assigned employees
+$tasks = $admin->runQuery("
+SELECT t.*, 
+       GROUP_CONCAT(u.fullname SEPARATOR ', ') AS assigned_employees
+FROM tasks t
+LEFT JOIN task_assignments ta ON t.id = ta.task_id
+LEFT JOIN user u ON ta.employee_id = u.id
+GROUP BY t.id
+");
+$tasks->execute();
+
+// Fetch all users
+$user_list = $admin->runQuery("SELECT id, fullname, role FROM user");
 $user_list->execute();
-    // Fetch all employees for the task creation form
-    $employees = $admin->runQuery("SELECT * FROM user");
-    $employees->execute();
 
-    
+// Fetch all employees for the task creation form
+$employees = $admin->runQuery("SELECT * FROM user");
+$employees->execute();
+
 ?>
 
 <!DOCTYPE html>
@@ -42,8 +49,8 @@ $user_list->execute();
 </head>
 <body>
 <div class="side-bar">
-<img class="profile-pic" src="profile-picture.jpg" alt="Profile Picture">
-<span class="user-indicator">ADMIN <?= htmlspecialchars($user_data['fullname']); ?></span>
+    <img class="profile-pic" src="<?= $profilePicturePath; ?>" alt="Profile Picture">
+    <span class="user-indicator">ADMIN <?= htmlspecialchars($user_data['fullname']); ?></span>
     <h3><a href="index.php">DASHBOARD</a></h3>
     <h3><a href="add-task.php">ADD TASK</a></h3>
     <h3><a href="task-list.php">TASK LIST</a></h3>
@@ -54,7 +61,7 @@ $user_list->execute();
 
 <div class="user-list-wrapper">
     <div class="user-list">
-        <h2>User List</h2>  
+        <h2>User List</h2>
         <table>
             <thead>
                 <tr>
@@ -65,7 +72,7 @@ $user_list->execute();
             </thead>
             <tbody>
                 <?php
-                // Fetch all users
+                // Fetch and display all users
                 while ($user = $user_list->fetch(PDO::FETCH_ASSOC)) {
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($user['id']) . "</td>";

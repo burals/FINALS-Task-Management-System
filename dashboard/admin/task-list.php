@@ -11,6 +11,12 @@ $stmt = $admin->runQuery("SELECT * FROM user WHERE id = :id");
 $stmt->execute(array(":id" => $_SESSION['adminSession']));
 $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Set profile picture path (check if a profile picture exists)
+$profilePicturePath = "../uploads/" . $_SESSION['adminSession'] . "/profile.jpg";
+if (!file_exists($profilePicturePath)) {
+    $profilePicturePath = "profile-picture.jpg"; // Fallback if no profile picture is set
+}
+
 // Initialize filters
 $filter_status = isset($_GET['status']) ? $_GET['status'] : '';
 $filter_date = isset($_GET['date_filter']) ? $_GET['date_filter'] : '';
@@ -64,7 +70,7 @@ $tasks->execute($params);
 </head>
 <body>
 <div class="side-bar">
-    <img class="profile-pic" src="profile-picture.jpg" alt="Profile Picture">
+    <img class="profile-pic" src="<?= $profilePicturePath; ?>" alt="Profile Picture">
     <span class="user-indicator">ADMIN <?= htmlspecialchars($user_data['fullname']); ?></span>
     <h3><a href="index.php">DASHBOARD</a></h3>
     <h3><a href="add-task.php">ADD TASK</a></h3>
