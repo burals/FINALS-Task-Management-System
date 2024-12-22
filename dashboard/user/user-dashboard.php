@@ -57,9 +57,12 @@ $tasks->execute(array(":id" => $user_data['id']));
     </div>
 
     <!-- Main Content -->
-    <div class="content">
+    <div class="wccontent">
         <h1>Welcome, <?= htmlspecialchars($user_data['fullname']); ?></h1>
+        <p>Today's Date: <?= date("F j, Y"); ?></p>
 
+        <div class="task_container">
+        <div class="tasklist">
         <h2>Your Assigned Tasks</h2>
         <?php if ($tasks->rowCount() > 0): ?>
             <table>
@@ -86,6 +89,8 @@ $tasks->execute(array(":id" => $user_data['id']));
                     <?php endwhile; ?>
                 </tbody>
             </table>
+        </div>
+        </div>
         <?php else: ?>
             <p>No tasks assigned to you.</p>
         <?php endif; ?>

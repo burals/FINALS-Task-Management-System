@@ -78,7 +78,7 @@ $overdueCount = $overdueStmt->fetch(PDO::FETCH_ASSOC)['overdue_count'];
     <h3><a href="../admin/authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
 </div>
 
-    <div class="content">
+<div class="chaircontent">
     <h1>Welcome, <?= htmlspecialchars($user_data['fullname']); ?>!</h1>
     <p>Today's Date: <?= date("F j, Y"); ?></p>
 

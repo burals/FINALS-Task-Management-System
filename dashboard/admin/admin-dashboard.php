@@ -92,10 +92,11 @@ $employees->execute();
     <h3><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
 </div>
 
-<div class="content">
+<div class="admincontent">
     <h1>Welcome, <?= htmlspecialchars($user_data['fullname']); ?>!</h1>
+    <div class="date">
     <p>Today's Date: <?= date("F j, Y"); ?></p>
-
+    </div>
     <!-- Key Metrics Section -->
     <div class="metrics">
         <div class="metric-card">
@@ -119,7 +120,6 @@ $employees->execute();
             <p><?= $overdueCount; ?></p>
         </div>
     </div>
-
     <!-- Recent Activities Section -->
     <h2>Recent Activities</h2>
     <div class="recent-activities">
