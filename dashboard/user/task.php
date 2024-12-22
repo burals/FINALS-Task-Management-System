@@ -37,10 +37,12 @@ class Task
         $update->execute(array(':status' => $status, ':task_id' => $taskId));
     }
 
-    public function getTaskStatus($taskId){
-
+    public function getTaskStatus($taskId)
+    {
+        $stmt = $this->admin->runQuery("SELECT status FROM tasks WHERE id = :task_id");
+        $stmt->execute(array(':task_id' => $taskId));
+        return $stmt->fetchColumn();
     }
-
 
     public function addNewTask($title, $description, $dueDate, $assignedEmployees)
 {
