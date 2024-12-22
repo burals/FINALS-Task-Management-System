@@ -1,6 +1,6 @@
 <?php
 require_once '../admin/authentication/admin-class.php';
-require_once 'Notification.php';
+require_once 'notification.php';
 
 
 class Task
@@ -36,13 +36,18 @@ class Task
         $update = $this->admin->runQuery("UPDATE tasks SET status = :status WHERE id = :task_id");
         $update->execute(array(':status' => $status, ':task_id' => $taskId));
     }
-
+    
     public function getTaskStatus($taskId)
     {
         $stmt = $this->admin->runQuery("SELECT status FROM tasks WHERE id = :task_id");
         $stmt->execute(array(':task_id' => $taskId));
-        return $stmt->fetchColumn();
+        $status = $stmt->fetchColumn();
+        if (!$status) {
+            throw new Exception("Task ID $taskId does not exist or has no status.");
+        }
+        return $status;
     }
+    
 
     public function addNewTask($title, $description, $dueDate, $assignedEmployees)
 {
