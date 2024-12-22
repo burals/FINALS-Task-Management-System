@@ -29,12 +29,14 @@ GROUP BY t.id
 $tasks->execute();
 
 // Fetch all users
-$user_list = $admin->runQuery("SELECT id, fullname, role FROM user");
-$user_list->execute();
+
 
 // Fetch all employees for the task creation form
 $employees = $admin->runQuery("SELECT * FROM user");
 $employees->execute();
+
+$user_list = $admin->runQuery("SELECT id, fullname, role FROM user WHERE status = 'active'");
+$user_list->execute();
 
 ?>
 
@@ -45,13 +47,14 @@ $employees->execute();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User List</title>
     <link rel="stylesheet" href="../../src/css/user-list.css">
+    <link rel="icon" href="../../src/css/img/CCS-LOGO.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="side-bar">
     <img class="profile-pic" src="<?= $profilePicturePath; ?>" alt="Profile Picture">
     <span class="user-indicator">ADMIN <?= htmlspecialchars($user_data['fullname']); ?></span>
-    <h3><a href="index.php">DASHBOARD</a></h3>
+    <h3><a href="admin-dashboard.php">DASHBOARD</a></h3>
     <h3><a href="add-task.php">ADD TASK</a></h3>
     <h3><a href="task-list.php">TASK LIST</a></h3>
     <h3><a href="user-list.php" class="active">USER LIST</a></h3>
@@ -68,20 +71,31 @@ $employees->execute();
                     <th>ID</th>
                     <th>Full Name</th>
                     <th>Role</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <?php
-                // Fetch and display all users
-                while ($user = $user_list->fetch(PDO::FETCH_ASSOC)) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($user['id']) . "</td>";
-                    echo "<td>" . htmlspecialchars($user['fullname']) . "</td>";
-                    echo "<td>" . htmlspecialchars($user['role']) . "</td>";
-                    echo "</tr>";
-                }
-                ?>
-            </tbody>
+    <?php
+    // Fetch and display all users
+    while ($user = $user_list->fetch(PDO::FETCH_ASSOC)) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($user['id']) . "</td>";
+        echo "<td>" . htmlspecialchars($user['fullname']) . "</td>";
+        echo "<td>" . htmlspecialchars($user['role']) . "</td>";
+        echo "<td>";
+        if ($user['role'] !== 'admin') {
+            echo "<a href='remove-user.php?id=" . htmlspecialchars($user['id']) . "' 
+                    onclick='return confirm(\"Are you sure you want to remove this user?\");'>
+                    Remove
+                  </a>";
+        } else {
+            echo "N/A";
+        }
+        echo "</td>";
+        echo "</tr>";
+    }
+    ?>
+</tbody>
         </table>
     </div>
 </div>

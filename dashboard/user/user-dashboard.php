@@ -41,6 +41,7 @@ $tasks->execute(array(":id" => $user_data['id']));
     <title>User Dashboard</title>
     <link rel="stylesheet" href="../../src/css/user-dashboard.css">
     <link rel="stylesheet" href="../../src/css/index.css">
+    <link rel="icon" href="../../src/css/img/CCS-LOGO.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
@@ -69,7 +70,7 @@ $tasks->execute(array(":id" => $user_data['id']));
                         <th>Description</th>
                         <th>Due Date</th>
                         <th>Status</th>
-                        <th>Assigned Employees</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -80,7 +81,7 @@ $tasks->execute(array(":id" => $user_data['id']));
                             <td><?= htmlspecialchars($task['description']); ?></td>
                             <td><?= htmlspecialchars($task['due_date']); ?></td>
                             <td><?= htmlspecialchars($task['status']); ?></td>
-                            <td><?= htmlspecialchars($task['assigned_employees']); ?></td>
+                       
                         </tr>
                     <?php endwhile; ?>
                 </tbody>

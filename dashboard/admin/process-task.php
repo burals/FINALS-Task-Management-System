@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate inputs
     if (empty($title) || empty($description) || empty($due_date) || empty($due_time) || empty($employee_ids)) {
-        echo "<script>alert('All fields are required!'); window.location.href = 'index.php';</script>";
+        echo "<script>alert('All fields are required!'); window.location.href = 'admin-dashboard.';</script>";
         exit;
     }
 
@@ -126,6 +126,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     // If accessed directly, redirect to the dashboard
-    header("Location: index.php");
+    header("Location: /");
     exit;
 }

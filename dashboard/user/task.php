@@ -35,6 +35,10 @@ class Task
         $update->execute(array(':status' => $status, ':task_id' => $taskId));
     }
 
+    public function getTaskStatus($taskId){
+        
+    }
+
     // Handle file upload for task-related documents
     public function uploadDocument($taskId, $file)
     {

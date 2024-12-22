@@ -32,7 +32,7 @@ body {
 }
 
 .side-bar h3 a.active {
-    color: #b85f00;
+    color: #f0940b;
     font-weight: bold;
 }
 
@@ -41,7 +41,7 @@ body {
 }
 
 .side-bar h3 a:hover {
-    color: #b85f00;
+    color: #f0940b;
     font-size: 20px;
     transition: 0.2s;
 }
@@ -96,8 +96,8 @@ body {
 
 /* Container for Two-Column Layout */
 .container {
-    padding-top: 100px; /* Space for fixed navbar */
-    margin-top: 50px;
+    padding-top: 50px; /* Space for fixed navbar */
+  margin: 3px;
     margin-left: 30%; /* Increased margin-left to move the container more to the right */
     width: 140%; /* Increased width to make the container wider */
     position: relative;
@@ -106,12 +106,14 @@ body {
 
 /* Task Form */
 .task-form {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
     width: 40%; /* Adjusted to make the form smaller */
     margin-right: 20px;
     padding: 20px;
-    background-color: #fff;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 10px 10px 12px rgba(0, 0, 0, 0.1);
+    
 }
 
 /* Form Styling */

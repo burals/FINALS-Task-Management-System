@@ -32,7 +32,7 @@ body {
 }
 
 .side-bar h3 a.active {
-    color: #b85f00;
+    color: #f0940b;
     font-weight: bold;
 }
 
@@ -41,7 +41,7 @@ body {
 }
 
 .side-bar h3 a:hover {
-    color: #b85f00;
+    color: #f0940b;
     font-size: 20px;
     transition: 0.2s;
 }
@@ -86,12 +86,13 @@ body {
 .task-list {
     width: 55%; /* Adjusted to utilize remaining space */
     padding: 20px;
-   
-    background-color: #fff;
+ 
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 10px 10px 12px rgba(20, 0, 10, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
     margin-left: 28%; /* Move the task list 25% to the right */
-    margin-top: 20px; /* Add some space to lower the task list */
+    margin-top: 80px; /* Add some space to lower the task list */
     position: relative;
 }
 
@@ -106,7 +107,7 @@ body {
 .task-list th, .task-list td {
     padding: 10px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: 1px solid #a7a6a6;
 }
 
 .task-list th {
@@ -115,9 +116,13 @@ body {
 }
 
 .task-list tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #e6e6e6;
 }
-
+.task-list a {
+    text-decoration: none; /* Removes underline */
+    font-weight: bold;
+    
+}
 .task-list tr:hover {
     background-color:#e6f2ff;
     transition: background-color 0.4s ease, color 0.4s ease;

@@ -1,0 +1,12 @@
+RewriteEngine On
+RewriteBase /dashboard/admin
+
+# If the URL doesn't match a real file or directory, rewrite it to the .php file
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^/]+)/$ $1.php [L]
+
+# Optionally redirect to remove the trailing slash (if not desired)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)/$ $1 [L,R=301]

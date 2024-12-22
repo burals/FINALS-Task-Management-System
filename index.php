@@ -11,6 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="icon" href="src/css/img/CCS-LOGO.png" type="image/x-icon">
     <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body class="image">

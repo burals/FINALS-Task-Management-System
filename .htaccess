@@ -1,0 +1,11 @@
+RewriteEngine On
+RewriteBase /
+
+# Remove .php from URL
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([a-zA-Z0-9_-]+)$ $1.php [L,QSA]
+
+# Optional: Redirect to clean URLs (optional)
+RewriteCond %{THE_REQUEST} \s/+index\.php
+RewriteRule ^index\.php$ / [R=301,L]

@@ -2,35 +2,52 @@
 // Start the session
 session_start();
 
-// Get the employee_id from the session
-$user_id = $_SESSION['user_id']; // Use the session's employee ID
-
-// Check if employee_id is set in session
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo "<div class='alert alert-danger'>You need to log in first.</div>";
     exit;
 }
+
 require_once '../../database/dbconnection.php';
 $database = new Database();
 $conn = $database->dbConnection();
+
+// Get the user ID from the session
+$user_id = $_SESSION['user_id'];
 
 // Get task_id from URL
 $task_id = $_GET['task_id'] ?? null;
 
 if (!$task_id) {
-    echo "No task ID provided.";
+    echo "<div class='alert alert-danger'>No task ID provided.</div>";
     exit;
 }
 
-// Fetch reports for the current task
+// Fetch reports for the task
 $stmt = $conn->prepare("
     SELECT r.id, r.user_id, r.task_id, r.content, r.created_at
     FROM reports r
-    JOIN user e ON r.user_id = e.id
     WHERE r.task_id = ?
 ");
-$stmt->execute([$task_id]);
+if (!$stmt->execute([$task_id])) {
+    echo "<div class='alert alert-danger'>Error fetching reports:</div>";
+    exit;
+}
 $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch attached documents for the task
+$doc_stmt = $conn->prepare("
+    SELECT id, file_path
+    FROM task_documents
+    WHERE task_id = ?
+");
+
+if (!$doc_stmt->execute([$task_id])) {
+    echo "<div class='alert alert-danger'>Error fetching documents:</div>";
+    exit;
+}
+$documents = $doc_stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +64,7 @@ $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h2>Reports for Task ID: <span><?= htmlspecialchars($task_id) ?></span></h2>
 
         <!-- Display Reports -->
-        <?php if ($reports): ?>
+        <?php if (!empty($reports)): ?>
             <div class="card">
                 <div class="card-header">Submitted Reports</div>
                 <div class="card-body">
@@ -65,8 +82,9 @@ $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         <?php else: ?>
             <div class="alert alert-info">No reports found for this task.</div>
+        
         <?php endif; ?>
-
+        <a href="view-report-files.php?task_id=<?= htmlspecialchars($task_id) ?>" class="btn btn-primary mt-4">See Report Files</a>
         <a href="task-list.php" class="btn btn-primary mt-4">Back</a>
     </div>
 </body>

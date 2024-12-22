@@ -66,6 +66,7 @@ $tasks->execute($params);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task List</title>
     <link rel="stylesheet" href="../../src/css/task-list.css">
+    <link rel="icon" href="../../src/css/img/CCS-LOGO.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -77,6 +78,7 @@ $tasks->execute($params);
     <h3><a href="task-list.php" class="active">TASK LIST</a></h3>
     <h3><a href="profile.php">PROFILE</a></h3>
     <h3><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
+    
 </div>
 
 <!-- Task List with Filters -->

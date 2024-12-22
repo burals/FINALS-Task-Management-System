@@ -43,13 +43,14 @@ $employees->execute();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Task</title>
     <link rel="stylesheet" href="../../src/css/add-task.css">
+    <link rel="icon" href="../../src/css/img/CCS-LOGO.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="side-bar">
     <img class="profile-pic" src="<?= $profilePicturePath; ?>" alt="Profile Picture">
     <span class="user-indicator">ADMIN <?= htmlspecialchars($user_data['fullname']); ?></span>
-    <h3><a href="index.php">DASHBOARD</a></h3>
+    <h3><a href="admin-dashboard.php">DASHBOARD</a></h3>
     <h3><a href="add-task.php" class="active">ADD TASK</a></h3>
     <h3><a href="task-list.php">TASK LIST</a></h3>
     <h3><a href="user-list.php">USER LIST</a></h3>

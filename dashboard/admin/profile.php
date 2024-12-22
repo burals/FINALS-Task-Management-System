@@ -68,6 +68,7 @@ class ProfilePage
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
+    <link rel="icon" href="../../src/css/img/CCS-LOGO.png" type="image/x-icon">
     <link rel="stylesheet" href="../../src/css/user-dashboard.css">
     <link rel="stylesheet" href="../../src/css/index.css">
     <link rel="stylesheet" href="../../src/css/edit-profile.css">
@@ -77,11 +78,11 @@ class ProfilePage
     <div class="side-bar">
         <img class="profile-pic" src="$profilePicture" alt="Profile Picture">
         <span class="user-indicator">$role $fullname</span>
-        <h3><a href="index.php" class="active">DASHBOARD</a></h3>
+        <h3><a href="admin-dashboard.php">DASHBOARD</a></h3>
         <h3><a href="add-task.php">ADD TASK</a></h3>
         <h3><a href="task-list.php">TASK LIST</a></h3>
         <h3><a href="user-list.php">USER LIST</a></h3>
-        <h3><a href="profile.php">PROFILE</a></h3>
+        <h3><a href="profile.php" class="active">PROFILE</a></h3>
         <h3><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
     </div>
 

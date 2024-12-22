@@ -46,7 +46,7 @@ body {
 }
 
 .side-bar h3 a.active {
-    color: #b85f00;
+    color: #f0940b;
     font-weight: bold;
 }
 
@@ -55,7 +55,7 @@ body {
 }
 
 .side-bar h3 a:hover {
-    color: #b85f00;
+    color: #f0940b;
     font-size: 20px;
     transition: 0.2s;
 }
@@ -68,6 +68,7 @@ body {
 }
 
 .content {
+    
     width: 1600px;
     margin-left: 290px;
     padding: 20px;
@@ -85,7 +86,7 @@ body {
 }
 
 table {
-    width: 100%;
+    width: 50%;
     border-collapse: collapse;
     margin-top: 20px;
 }

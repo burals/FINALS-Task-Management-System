@@ -183,7 +183,7 @@
                 </html>";
 
                 $this->send_email($email, $message, $subject, $this->smtp_email, $this->smtp_password);
-                echo "<script>alert('OTP Verified and Admin Added Successfully, Thank You :)'); window.location.href = '../../../index.php';</script>";
+                echo "<script>alert('OTP Verified and Admin Added Successfully, Thank You :)'); window.location.href = '../../../';</script>";
 
                 unset($_SESSION['not_verify_fullname']);
                 unset($_SESSION['not_verify_email']);
@@ -198,18 +198,35 @@
             }
         }
 
+        public function removeUser($userId) {
+            try {
+                // Update the user's status to 'inactive'
+                $stmt = $this->conn->prepare("UPDATE user SET status = 'inactive' WHERE id = :id");
+                $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+        
+                if ($stmt->execute()) {
+                    return true; // Success
+                } else {
+                    return false; // Failed to execute
+                }
+            } catch (PDOException $e) {
+                return "Error: " . $e->getMessage(); // Return the error message
+            }
+        }
+        
+
             public function addAdmin($csrf_token, $fullname, $email, $password)
             {
                 $stmt = $this->runQuery("SELECT * FROM user WHERE email = :email");
                 $stmt->execute(array(":email" => $email));
 
                 if($stmt->rowCount() > 0){
-                    echo "<script>alert('Email already Exist.'); window.location.href = '../../../index.php';</script>";
+                    echo "<script>alert('Email already Exist.'); window.location.href = '../../../';</script>";
                     exit;
                 }
 
                 if (!isset($csrf_token) || !hash_equals($_SESSION['csrf_token'], $csrf_token)){
-                    echo "<script>alert('Invalid CSRF Token.'); window.location.href = '../../../index.php';</script>";
+                    echo "<script>alert('Invalid CSRF Token.'); window.location.href = '../../../';</script>";
                     exit;
                 }
 
@@ -232,7 +249,7 @@
                 try {
                     // CSRF Token Validation
                     if (!isset($csrf_token) || !hash_equals($_SESSION['csrf_token'], $csrf_token)) {
-                        echo "<script>alert('Invalid CSRF token.'); window.location.href = '../../../index.php'; </script>";
+                        echo "<script>alert('Invalid CSRF token.'); window.location.href = '../../../'; </script>";
                         exit;
                     }
                     unset($_SESSION['csrf_token']);
@@ -261,7 +278,7 @@
                                 // Role-based redirection
                                 switch ($userRow['role']) {
                                     case 'admin':
-                                        echo "<script>window.location.href = '../index.php';</script>";
+                                        echo "<script>window.location.href = '../admin-dashboard.php';</script>";
                                         break;
                                     case 'users':
                                         echo "<script>window.location.href = '../../user/user-dashboard.php';</script>";
@@ -270,20 +287,20 @@
                                         echo "<script>window.location.href = '../../chairperson/chairperson-dashboard.php';</script>";
                                         break;
                                     default:
-                                        echo "<script>alert('Invalid role.'); window.location.href = '/FINALS-Task-Management-System-lagansua/index.php';</script>";
+                                        echo "<script>alert('Invalid role.'); window.location.href = '/FINALS-Task-Management-System-lagansua/';</script>";
                                         break;
                                 }
                                 exit;
                             } else {
-                                echo "<script>alert('Password is incorrect.'); window.location.href = '../../../index.php'; </script>";
+                                echo "<script>alert('Password is incorrect.'); window.location.href = '../../../'; </script>";
                                 exit;
                             }
                         } else {
-                            echo "<script>alert('Entered email is not verified.'); window.location.href = '../../../index.php'; </script>";
+                            echo "<script>alert('Entered email is not verified.'); window.location.href = '../../../'; </script>";
                             exit;
                         }
                     } else {
-                        echo "<script>alert('No account found.'); window.location.href = '../../../index.php'; </script>";
+                        echo "<script>alert('No account found.'); window.location.href = '../../../'; </script>";
                         exit;
                     }
             
@@ -295,7 +312,7 @@
             public function adminSignout()
             {
                 // Redirect with a success message
-                echo "<script>alert('Sign Out Successfully'); window.location.href = '../../../index.php';</script>";
+                echo "<script>alert('Sign Out Successfully'); window.location.href = '../../../';</script>";
                 exit;
             }
 
@@ -333,7 +350,7 @@
     
             public function redirect()
             {
-                echo "<script>alert('Admin must loggin first'); window.location.href = '../../../index.php';</script>";
+                echo "<script>alert('Admin must loggin first'); window.location.href = '../../../';</script>";
                 exit;
             }
 
@@ -445,7 +462,7 @@
                     // Send the reset email
                     $this->send_email($email, $message, $subject, $this->smtp_email, $this->smtp_password);
 
-                    echo "<script>alert('A password reset link has been sent to your email.'); window.location.href = '../../../index.php';</script>";
+                    echo "<script>alert('A password reset link has been sent to your email.'); window.location.href = '../../../';</script>";
                     exit;
                         } else {
                             echo "<script>alert('No account found with that email.'); window.location.href = '../../../forgot-password.php';</script>";
@@ -480,7 +497,7 @@
                     ":reset_token" => $token
                 ));
 
-                echo "<script>alert('Your password has been successfully reset. You can now log in with your new password.'); window.location.href = '../../../index.php';</script>";
+                echo "<script>alert('Your password has been successfully reset. You can now log in with your new password.'); window.location.href = '../../../';</script>";
                 exit;
             } else {
                 echo "<script>alert('Invalid or expired token. Please request a new password reset.'); window.location.href = '../../../forgot-password.php';</script>";

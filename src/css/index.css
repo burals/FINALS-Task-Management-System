@@ -52,7 +52,7 @@ body {
 }
 
 .side-bar h3 a.active {
-    color: #b85f00;
+    color: #f0940b;
     font-weight: bold;
 }
 
@@ -61,7 +61,7 @@ body {
 }
 
 .side-bar h3 a:hover {
-    color: #b85f00;
+    color: #f0940b;
     font-size: 20px;
     transition: 0.2s;
 }
@@ -158,6 +158,7 @@ ul {
 .recent-activities {
     display: flex;
   align-items: flex-start;
+
 }
 
 ul li {

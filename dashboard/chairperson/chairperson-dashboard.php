@@ -59,6 +59,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chairperson Dashboard</title>
     <link rel="stylesheet" href="../../src/css/index.css">
+    <link rel="icon" href="../../src/css/img/CCS-LOGO.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>

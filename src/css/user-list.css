@@ -32,16 +32,16 @@ body {
 }
 
 .side-bar h3 a.active {
-    color: #b85f00;
+    color: #f0940b;
     font-weight: bold;
 }
 
-.side-bar h3:last-of-type {
+.side-bar h3:last-of-type a{
     color: #c0392b; /* Red color for the last item (Sign Out) */
 }
 
 .side-bar h3 a:hover {
-    color: #b85f00;
+    color: #f0940b;
     font-size: 20px;
     transition: 0.2s;
 }
@@ -75,11 +75,12 @@ body {
 }
 /* User List Wrapper */
 .user-list-wrapper {
-    margin: 40px auto; /* Adds space above and centers the box */
+    margin: 80px 25%; /* Adds space above and centers the box */
     padding: 20px; /* Adds padding inside the box */
-    background-color: #fff; /* White box background */
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
     border-radius: 8px; /* Rounded corners */
-    box-shadow: 10px 10px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
     max-width: 800px; /* Medium width for the box */
     width: 100%; /* Ensures responsiveness */
 }
@@ -90,14 +91,19 @@ body {
     border-collapse: collapse;
     font-size: 16px;
     margin-top: 10px; /* Adds space between the header and table */
+    
 }
 
 .user-list th, .user-list td {
     padding: 10px;
     text-align: left;
-    border: 1px solid #ddd; /* Light border for cells */
+    border: 1px solid #a7a6a6; /* Light border for cells */
 }
-
+.user-list a {
+    text-decoration: none; /* Removes underline */
+    color: #c0392b; /* Red color for better visibility */
+    
+}
 .user-list th {
     background-color: #2c3e50; /* Navbar matching color */
     color: #fff; /* White text for contrast */
@@ -105,7 +111,7 @@ body {
 }
 
 .user-list tr:nth-child(even) {
-    background-color: #f9f9f9; /* Light gray for alternate rows */
+    background-color: #e6e6e6; /* Light gray for alternate rows */
 }
 
 .user-list tr:hover {

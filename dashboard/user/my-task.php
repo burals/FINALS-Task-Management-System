@@ -84,8 +84,9 @@ if (isset($_POST['submit_task_action'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Tasks</title>
-    <link rel="stylesheet" href="../../src/css/user-dashboard.css">
+    
     <link rel="stylesheet" href="../../src/css/index.css">
+    <link rel="icon" href="../../src/css/img/CCS-LOGO.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
@@ -114,7 +115,7 @@ if (isset($_POST['submit_task_action'])) {
                         <th>Description</th>
                         <th>Due Date</th>
                         <th>Status</th>
-                        <th>Assigned Employees</th>
+                        
                         <th>Upload Document / Generate Report</th>
                     </tr>
                 </thead>
@@ -126,7 +127,7 @@ if (isset($_POST['submit_task_action'])) {
                             <td><?= htmlspecialchars($task['description']); ?></td>
                             <td><?= htmlspecialchars($task['due_date']); ?></td>
                             <td><?= htmlspecialchars($task['status']); ?></td>
-                            <td><?= htmlspecialchars($task['assigned_employees']); ?></td>
+                            
                             <td>
                                 <form method="POST" enctype="multipart/form-data" action="my-task.php">
                                     <input type="hidden" name="task_id" value="<?= $task['id']; ?>"> <!-- Hidden task ID -->
