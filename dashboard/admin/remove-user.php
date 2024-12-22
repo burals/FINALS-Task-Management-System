@@ -8,7 +8,7 @@ if (isset($_GET['id'])) {
 
     // Call the modified removeUser function
     if ($admin->removeUser($userId)) {
-        header("Location: user-list.php?success=User+status+updated+to+inactive");
+        header("Location: user-list.php?success=User+status+updated+to+not_active");
     } else {
         header("Location: user-list.php?error=Failed+to+update+user+status");
     }

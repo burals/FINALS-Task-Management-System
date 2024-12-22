@@ -9,6 +9,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require __DIR__.'/autoload copy.php';
+require_once '../admin/authentication/admin-class.php';
+$admin = new ADMIN();
 
 // Create a new PDO connection
 try {
@@ -34,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate inputs
     if (empty($title) || empty($description) || empty($due_date) || empty($due_time) || empty($employee_ids)) {
-        echo "<script>alert('All fields are required!'); window.location.href = 'chairperson-dashboard.php';</script>";
+        echo "<script>alert('All fields are required!'); window.location.href = 'admin-dashboard.';</script>";
         exit;
     }
 
@@ -47,16 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insert the task into the database
     try {
-        // Start a transaction
-        $pdo->beginTransaction();
-
-        // Insert task into the `tasks` table
-        $stmt = $pdo->prepare("INSERT INTO tasks (title, description, due_date) VALUES (:title, :description, :due_date)");
-        $stmt->execute([
-            ':title' => $title,
-            ':description' => $description,
-            ':due_date' => $due_datetime
-        ]);
+        $admin->createTask($title, $description, $due_datetime, $employee_ids);
+        header("Location: task-list.php?success=task_created");
+    } catch (Exception $e) {
+        header("Location: add-task.php?error=" . urlencode($e->getMessage()));
 
         // Get the ID of the newly inserted task
         $task_id = $pdo->lastInsertId();
@@ -126,6 +122,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     // If accessed directly, redirect to the dashboard
-    header("Location: chairperson-dashboard");
+    header("Location: /");
     exit;
 }

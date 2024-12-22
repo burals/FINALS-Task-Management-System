@@ -9,9 +9,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require __DIR__.'/autoload copy.php';
-
-// Start the session to store notifications
-session_start();
+require_once '../admin/authentication/admin-class.php';
+$admin = new ADMIN();
 
 // Create a new PDO connection
 try {
@@ -37,31 +36,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate inputs
     if (empty($title) || empty($description) || empty($due_date) || empty($due_time) || empty($employee_ids)) {
-        $_SESSION['error'] = 'All fields are required!';
-        header("Location: admin-dashboard.php");
+        echo "<script>alert('All fields are required!'); window.location.href = 'admin-dashboard.';</script>";
         exit;
     }
 
     // Ensure the due date and time are valid
     $current_datetime = date('Y-m-d H:i:s');
     if ($due_datetime < $current_datetime) {
-        $_SESSION['error'] = 'Due date and time cannot be in the past!';
-        header("Location: add-task.php");
+        echo "<script>alert('Due date and time cannot be in the past!'); window.location.href = 'add-task.php';</script>";
         exit;
     }
 
     // Insert the task into the database
     try {
-        // Start a transaction
-        $pdo->beginTransaction();
-
-        // Insert task into the `tasks` table
-        $stmt = $pdo->prepare("INSERT INTO tasks (title, description, due_date) VALUES (:title, :description, :due_date)");
-        $stmt->execute([
-            ':title' => $title,
-            ':description' => $description,
-            ':due_date' => $due_datetime
-        ]);
+        $admin->createTask($title, $description, $due_datetime, $employee_ids);
+        header("Location: task-list.php?success=task_created");
+    } catch (Exception $e) {
+        header("Location: add-task.php?error=" . urlencode($e->getMessage()));
 
         // Get the ID of the newly inserted task
         $task_id = $pdo->lastInsertId();
@@ -83,36 +74,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $email = $employee['email'];
                 $employee_name = $employee['fullname'];
 
-                // Set up PHPMailer to send the email
+                // Send email using PHPMailer
                 $mail = new PHPMailer(true);
                 try {
-                    //Server settings
                     $mail->isSMTP();
-                    $mail->SMTPDebug = 0;
-                    $mail->Host = "smtp.gmail.com";
+                    $mail->Host = 'smtp.gmail.com';
                     $mail->SMTPAuth = true;
                     $mail->Username = $smtp_email;
                     $mail->Password = $smtp_password;
-                    $mail->SMTPSecure = "tls";
+                    $mail->SMTPSecure = 'tls';
                     $mail->Port = 587;
 
-                    // Recipients
-                    $mail->setFrom($smtp_email, "CSS Task Management System");
+                    $mail->setFrom($smtp_email, 'CCS Task Management System');
                     $mail->addAddress($email, $employee_name);
 
-                    // Content
                     $mail->isHTML(true);
                     $mail->Subject = 'New Task Assigned: ' . $title;
-                    $mail->Body = 'You have been assigned a new task:<br><br>' . 
-                                  'Task: ' . $title . '<br>' . 
-                                  'Description: ' . $description . '<br>' . 
-                                  'Due Date: ' . $due_datetime . '<br>' .
+                    $mail->Body = 'Hello ' . htmlspecialchars($employee_name) . ',<br><br>' .
+                                  'You have been assigned a new task:<br>' .
+                                  '<strong>Task:</strong> ' . htmlspecialchars($title) . '<br>' .
+                                  '<strong>Description:</strong> ' . htmlspecialchars($description) . '<br>' .
+                                  '<strong>Due Date:</strong> ' . htmlspecialchars($due_datetime) . '<br><br>' .
                                   'Please complete the task on time.';
 
-                    // Send the email
                     $mail->send();
                 } catch (Exception $e) {
-                    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                    error_log('Mailer Error: ' . $mail->ErrorInfo);
                 }
             }
         }
@@ -120,35 +107,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Commit the transaction
         $pdo->commit();
 
-        // Set success message in session
-        $_SESSION['success'] = 'Task successfully created and assigned!';
-        header('Location: task-list.php');
+        // Redirect to the dashboard with a success message
+        header('Location: task-list.php?success=task_created');
         exit;
 
     } catch (PDOException $e) {
         // Roll back the transaction on error
         $pdo->rollBack();
-        $_SESSION['error'] = 'Error creating task: ' . $e->getMessage();
-        header('Location: add-task.php');
-        exit;
-    }
-} elseif (isset($_GET['task_id']) && isset($_GET['action']) && $_GET['action'] === 'complete') {
-    // Mark the task as completed
-    $task_id = $_GET['task_id'];
-
-    try {
-        // Update task status to 'completed'
-        $stmt = $pdo->prepare("UPDATE tasks SET status = 'completed' WHERE id = :task_id");
-        $stmt->execute([':task_id' => $task_id]);
-
-        // Set success message in session
-        $_SESSION['success'] = 'Task completed successfully!';
-        header('Location: task-list.php');
-        exit;
-    } catch (PDOException $e) {
-        $_SESSION['error'] = 'Error completing task: ' . $e->getMessage();
-        header('Location: task-list.php');
-        exit;
+        echo "Error: " . $e->getMessage();
     }
 } else {
     // If accessed directly, redirect to the dashboard

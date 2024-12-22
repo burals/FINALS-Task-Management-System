@@ -41,6 +41,11 @@
     $pending_tasks_stmt->execute();
     $pending_count = $pending_tasks_stmt->fetch(PDO::FETCH_ASSOC)['pending_count'];
 
+    $overdueStmt = $admin->runQuery("SELECT COUNT(*) AS overdue_count FROM tasks WHERE due_date < NOW() AND status != 'completed'");
+$overdueStmt->execute();
+$overdueCount = $overdueStmt->fetch(PDO::FETCH_ASSOC)['overdue_count'];
+
+
     // Fetch task data and assigned employees
     $tasks = $admin->runQuery("SELECT t.*, GROUP_CONCAT(u.fullname SEPARATOR ', ') AS assigned_employees FROM tasks t LEFT JOIN task_assignments ta ON t.id = ta.task_id LEFT JOIN user u ON ta.employee_id = u.id GROUP BY t.id");
     $tasks->execute();
@@ -91,12 +96,15 @@
             <h2>Completed Tasks</h2>
             <p><?= $completed_tasks; ?></p>
         </div>
-        <div class="metric-cards">
+       
     <div class="metric-card">
         <h2>Pending Tasks</h2>
         <p><?= $pending_count; ?></p>
     </div>
-</div>
+    <div class="metric-card">
+            <h2>Overdue Tasks</h2>
+            <p><?= $overdueCount; ?></p>
+        </div>
 
     </div>
 

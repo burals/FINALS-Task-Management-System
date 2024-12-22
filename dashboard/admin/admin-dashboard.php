@@ -30,6 +30,12 @@ $completed_tasks_stmt = $admin->runQuery("SELECT COUNT(*) AS completed_tasks FRO
 $completed_tasks_stmt->execute();
 $completed_tasks = $completed_tasks_stmt->fetch(PDO::FETCH_ASSOC)['completed_tasks'];
 
+// Fetch count of overdue tasks
+$overdueStmt = $admin->runQuery("SELECT COUNT(*) AS overdue_count FROM tasks WHERE due_date < NOW() AND status != 'completed'");
+$overdueStmt->execute();
+$overdueCount = $overdueStmt->fetch(PDO::FETCH_ASSOC)['overdue_count'];
+
+
 // Fetch recent tasks based on updated_at
 $recent_tasks_stmt = $admin->runQuery("
     SELECT title, description, status, updated_at 
@@ -107,6 +113,10 @@ $employees->execute();
         <div class="metric-card">
             <h2>Pending Tasks</h2>
             <p><?= $pending_count; ?></p>
+        </div>
+        <div class="metric-card">
+            <h2>Overdue Tasks</h2>
+            <p><?= $overdueCount; ?></p>
         </div>
     </div>
 

@@ -53,10 +53,10 @@ $documents = $doc_stmt->fetchAll(PDO::FETCH_ASSOC);
             <ul class="file-list">
                 <?php foreach ($documents as $doc): ?>
                     <?php
-                    
+
                     // Get the relative file path
-                    $file_path = "/SETH/LastFinal/dashboard/uploads/" . $doc['file_path'];
-                    $server_file_path = $_SERVER['DOCUMENT_ROOT'] . "/SETH/LastFinal/dashboard/uploads/" . $doc['file_path']; // Corrected path
+                    $file_path = "localhost/FINALS-Task-Management-System/dashboard/uploads/" . $doc['file_path'];
+                    $server_file_path = $_SERVER['DOCUMENT_ROOT'] . "localhost/FINALS-Task-Management-System/dashboard/uploads/" . $doc['file_path']; // Corrected path
 
                     // Debugging: Log the server root and file path
                     error_log("Server Root: " . $_SERVER['DOCUMENT_ROOT']);

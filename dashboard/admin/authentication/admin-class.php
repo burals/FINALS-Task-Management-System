@@ -183,7 +183,7 @@
                 </html>";
 
                 $this->send_email($email, $message, $subject, $this->smtp_email, $this->smtp_password);
-                echo "<script>alert('OTP Verified and Admin Added Successfully, Thank You :)'); window.location.href = '../../../';</script>";
+                echo "<script>alert('OTP Verified and Account Added Successfully, Thank You :)'); window.location.href = '../../../';</script>";
 
                 unset($_SESSION['not_verify_fullname']);
                 unset($_SESSION['not_verify_email']);
@@ -198,10 +198,118 @@
             }
         }
 
+        public function getUserById($id) {
+            try {
+                $stmt = $this->runQuery("SELECT * FROM user WHERE id = :id");
+                $stmt->execute([':id' => $id]);
+                return $stmt->fetch(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                echo "Error: " . $e->getMessage(); // Display the error for debugging
+                return false; // Return false on failure
+            }
+        }
+        public function createTask($title, $description, $dueDate, $employeeIds) {
+            try {
+                $this->conn->beginTransaction();
+        
+                // Insert task into the `tasks` table
+                $stmt = $this->conn->prepare("INSERT INTO tasks (title, description, due_date) VALUES (:title, :description, :due_date)");
+                $stmt->execute([
+                    ':title' => $title,
+                    ':description' => $description,
+                    ':due_date' => $dueDate
+                ]);
+        
+                // Get the task ID of the newly created task
+                $taskId = $this->conn->lastInsertId();
+        
+                // Assign employees to the task
+                $assignStmt = $this->conn->prepare("INSERT INTO task_assignments (task_id, employee_id) VALUES (:task_id, :employee_id)");
+                foreach ($employeeIds as $employeeId) {
+                    $assignStmt->execute([
+                        ':task_id' => $taskId,
+                        ':employee_id' => $employeeId
+                    ]);
+                }
+        
+                $this->conn->commit();
+                return true; // Task created successfully
+            } catch (PDOException $e) {
+                $this->conn->rollBack();
+                throw new Exception("Failed to create task: " . $e->getMessage());
+            }
+        }
+        public function getActiveEmployees() {
+            $stmt = $this->conn->prepare("SELECT id, fullname, role FROM user WHERE status = 'active'");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        public function getActiveUsers() {
+            $stmt = $this->runQuery("SELECT id, fullname FROM user WHERE status = 'active'");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+        public function getAssignedUsers($taskId) {
+            $stmt = $this->runQuery("
+                SELECT u.id, u.fullname 
+                FROM user u
+                JOIN task_assignments ta ON ta.employee_id = u.id
+                WHERE ta.task_id = :task_id
+            ");
+            $stmt->execute([':task_id' => $taskId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+        public function updateTask($taskId, $title, $description, $dueDate, $status) {
+            $stmt = $this->runQuery("
+                UPDATE tasks 
+                SET title = :title, description = :description, due_date = :due_date, status = :status 
+                WHERE id = :id
+            ");
+            $stmt->execute([
+                ':title' => $title,
+                ':description' => $description,
+                ':due_date' => $dueDate,
+                ':status' => $status,
+                ':id' => $taskId
+            ]);
+        }
+        public function updateTaskAssignments($taskId, $newAssignedEmployees, $currentAssignedEmployees) {
+            // Remove employees who are no longer assigned
+            $currentAssignedIds = array_column($currentAssignedEmployees, 'id');
+            $removedEmployees = array_diff($currentAssignedIds, $newAssignedEmployees);
+        
+            if (!empty($removedEmployees)) {
+                $stmt = $this->runQuery("
+                    DELETE FROM task_assignments 
+                    WHERE task_id = :task_id AND employee_id IN (" . implode(',', $removedEmployees) . ")
+                ");
+                $stmt->execute([':task_id' => $taskId]);
+            }
+        
+            // Add new assignments
+            $newAssignments = array_diff($newAssignedEmployees, $currentAssignedIds);
+        
+            if (!empty($newAssignments)) {
+                $stmt = $this->runQuery("
+                    INSERT INTO task_assignments (task_id, employee_id) VALUES (:task_id, :employee_id)
+                ");
+                foreach ($newAssignments as $employeeId) {
+                    $stmt->execute([
+                        ':task_id' => $taskId,
+                        ':employee_id' => $employeeId
+                    ]);
+                }
+            }
+        }
+        
+        
+
         public function removeUser($userId) {
             try {
                 // Update the user's status to 'inactive'
-                $stmt = $this->conn->prepare("UPDATE user SET status = 'inactive' WHERE id = :id");
+                $stmt = $this->conn->prepare("UPDATE user SET status = 'not_active' WHERE id = :id");
                 $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
         
                 if ($stmt->execute()) {
@@ -287,20 +395,20 @@
                                         echo "<script>window.location.href = '../../chairperson/chairperson-dashboard.php';</script>";
                                         break;
                                     default:
-                                        echo "<script>alert('Invalid role.'); window.location.href = '/FINALS-Task-Management-System-lagansua/';</script>";
+                                        echo "<script>alert('Invalid role.'); window.location.href = '/FINALS-Task-Management-System-lagansua/index.php';</script>";
                                         break;
                                 }
                                 exit;
                             } else {
-                                echo "<script>alert('Password is incorrect.'); window.location.href = '../../../'; </script>";
+                                echo "<script>alert('Password is incorrect.'); window.location.href = '../../../index.php'; </script>";
                                 exit;
                             }
                         } else {
-                            echo "<script>alert('Entered email is not verified.'); window.location.href = '../../../'; </script>";
+                            echo "<script>alert('Entered email is not verified.'); window.location.href = '../../../index.php'; </script>";
                             exit;
                         }
                     } else {
-                        echo "<script>alert('No account found.'); window.location.href = '../../../'; </script>";
+                        echo "<script>alert('No account found.'); window.location.href = '../../../index.php'; </script>";
                         exit;
                     }
             
@@ -312,7 +420,7 @@
             public function adminSignout()
             {
                 // Redirect with a success message
-                echo "<script>alert('Sign Out Successfully'); window.location.href = '../../../';</script>";
+                echo "<script>alert('Sign Out Successfully'); window.location.href = '../../../index.php';</script>";
                 exit;
             }
 
@@ -327,7 +435,7 @@
                 $mail->addAddress($email);
                 $mail->Username = $smtp_email;
                 $mail->Password = $smtp_password;
-                $mail->setFrom($smtp_email, "CSS Task Management");
+                $mail->setFrom($smtp_email, "CCS Task Management");
                 $mail->Subject = $subject;
                 $mail->msgHTML($message);
                 $mail->Send();
@@ -350,7 +458,7 @@
     
             public function redirect()
             {
-                echo "<script>alert('Admin must loggin first'); window.location.href = '../../../';</script>";
+                echo "<script>alert('Admin must loggin first'); window.location.href = '../../../index.php';</script>";
                 exit;
             }
 
@@ -462,7 +570,7 @@
                     // Send the reset email
                     $this->send_email($email, $message, $subject, $this->smtp_email, $this->smtp_password);
 
-                    echo "<script>alert('A password reset link has been sent to your email.'); window.location.href = '../../../';</script>";
+                    echo "<script>alert('A password reset link has been sent to your email.'); window.location.href = '../../../index.php';</script>";
                     exit;
                         } else {
                             echo "<script>alert('No account found with that email.'); window.location.href = '../../../forgot-password.php';</script>";
@@ -497,7 +605,7 @@
                     ":reset_token" => $token
                 ));
 
-                echo "<script>alert('Your password has been successfully reset. You can now log in with your new password.'); window.location.href = '../../../';</script>";
+                echo "<script>alert('Your password has been successfully reset. You can now log in with your new password.'); window.location.href = '../../../index.php';</script>";
                 exit;
             } else {
                 echo "<script>alert('Invalid or expired token. Please request a new password reset.'); window.location.href = '../../../forgot-password.php';</script>";

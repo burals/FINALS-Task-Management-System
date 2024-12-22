@@ -7,33 +7,17 @@ if (!$admin->isUserLoggedIn()) {
 }
 
 // Fetch user data
-$stmt = $admin->runQuery("SELECT * FROM user WHERE id = :id");
-$stmt->execute(array(":id" => $_SESSION['adminSession']));
-$user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+$user_data = $admin->getUserById($_SESSION['adminSession']);
+
+// Fetch active employees for the dropdown
+$activeEmployees = $admin->getActiveEmployees();
+
 
 // Set profile picture path (check if a profile picture exists)
 $profilePicturePath = "../uploads/" . $_SESSION['adminSession'] . "/profile.jpg";
 if (!file_exists($profilePicturePath)) {
     $profilePicturePath = "profile-picture.jpg"; // Fallback if no profile picture is set
 }
-
-// Fetch task data and assigned employees
-$tasks = $admin->runQuery("
-    SELECT t.*, 
-           GROUP_CONCAT(u.fullname SEPARATOR ', ') AS assigned_employees
-    FROM tasks t
-    LEFT JOIN task_assignments ta ON t.id = ta.task_id
-    LEFT JOIN user u ON ta.employee_id = u.id
-    GROUP BY t.id
-");
-$tasks->execute();
-
-$user_list = $admin->runQuery("SELECT id, fullname, role FROM user");
-$user_list->execute();
-
-// Fetch all employees for the task creation form
-$employees = $admin->runQuery("SELECT * FROM user");
-$employees->execute();
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +42,6 @@ $employees->execute();
     <h3><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
 </div>
 <div class="container">
-    <!-- Left Column: Task Creation Form -->
     <div class="task-form">
         <h2>Create a New Task</h2>
         <form action="process-task.php" method="POST">
@@ -80,28 +63,14 @@ $employees->execute();
             <div class="form-group">
                 <label for="assign_employee">Assign to Employees</label>
                 <select id="assign_employee" name="employee_ids[]" multiple required>
-                    <?php while ($employee = $employees->fetch(PDO::FETCH_ASSOC)): ?>
+                    <?php foreach ($activeEmployees as $employee): ?>
                         <option value="<?= $employee['id']; ?>"><?= htmlspecialchars($employee['fullname']); ?></option>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
             <button type="submit" class="btn-submit">Create Task</button>
         </form>
-    </div>
-
-    <div class="feedback">
-        <?php if (isset($_GET['success'])): ?>
-            <?php if ($_GET['success'] == 'task_updated'): ?>
-                <div class="alert success">Task updated successfully!</div>
-            <?php elseif ($_GET['success'] == 'task_deleted'): ?>
-                <div class="alert success">Task deleted successfully!</div>
-            <?php elseif ($_GET['success'] == 'task_created'): ?>
-                <div class="alert success">Task created successfully!</div>
-            <?php endif; ?>
-        <?php elseif (isset($_GET['error'])): ?>
-            <div class="alert error"><?= htmlspecialchars($_GET['error']); ?></div>
-        <?php endif; ?>
     </div>
 </div>
 
