@@ -1,6 +1,10 @@
 <?php
 require_once 'authentication/admin-class.php';
+require_once 'notification.php';  // Include notification.php
 
+
+
+// Rest of your code...
 $admin = new ADMIN();
 if (!$admin->isUserLoggedIn()) {
     $admin->redirect('../../');

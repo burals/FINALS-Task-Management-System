@@ -1,6 +1,6 @@
 <?php
 
-require_once 'authentication/admin-class.php';
+require_once '../admin/authentication/admin-class.php';
 require_once '../../src/vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require_once '../../src/vendor/phpmailer/phpmailer/src/SMTP.php';
 require_once '../../src/vendor/phpmailer/phpmailer/src/Exception.php';
@@ -162,8 +162,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Task</title>
+    <link rel="stylesheet" href="../../src/css/edit.css">
     <link rel="icon" href="../../src/css/img/CCS-LOGO.png" type="image/x-icon">
-    <link rel="icon" href="src/css/img/CCS-LOGO.png" type="image/x-icon">
 </head>
 <body>
 <div class="form-container">

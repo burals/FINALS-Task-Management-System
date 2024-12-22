@@ -77,7 +77,7 @@ $tasks->execute($params);
     <h3><a href="add-task.php">ADD TASK</a></h3>
     <h3><a href="task-list.php" class="active">TASK LIST</a></h3>
     <h3><a href="profile.php">PROFILE</a></h3>
-    <h3><a href="authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
+    <h3><a href="../admin/authentication/admin-class.php?admin_signout">SIGN OUT</a></h3>
     
 </div>
 

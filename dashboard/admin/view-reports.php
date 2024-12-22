@@ -23,6 +23,19 @@ if (!$task_id) {
     exit;
 }
 
+// Handle delete request
+if (isset($_GET['delete_report_id'])) {
+    $delete_report_id = $_GET['delete_report_id'];
+
+    // Prepare the delete statement
+    $delete_stmt = $conn->prepare("DELETE FROM reports WHERE id = ? AND task_id = ?");
+    if ($delete_stmt->execute([$delete_report_id, $task_id])) {
+        echo "<div class='alert alert-success'>Report deleted successfully.</div>";
+    } else {
+        echo "<div class='alert alert-danger'>Error deleting report.</div>";
+    }
+}
+
 // Fetch reports for the task
 $stmt = $conn->prepare("
     SELECT r.id, r.user_id, r.task_id, r.content, r.created_at
@@ -75,6 +88,8 @@ $documents = $doc_stmt->fetchAll(PDO::FETCH_ASSOC);
                             <p><strong>Task ID:</strong> <?= htmlspecialchars($report['task_id']) ?></p>
                             <p><strong>Content:</strong> <?= htmlspecialchars($report['content']) ?></p>
                             <p><strong>Created At:</strong> <?= htmlspecialchars($report['created_at']) ?></p>
+                            <!-- Delete Report Button -->
+                            <a href="view-reports.php?task_id=<?= htmlspecialchars($task_id) ?>&delete_report_id=<?= htmlspecialchars($report['id']) ?>" class="btn btn-danger">Delete Report</a>
                         </div>
                         <hr>
                     <?php endforeach; ?>
@@ -82,8 +97,8 @@ $documents = $doc_stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         <?php else: ?>
             <div class="alert alert-info">No reports found for this task.</div>
-        
         <?php endif; ?>
+
         <a href="view-report-files.php?task_id=<?= htmlspecialchars($task_id) ?>" class="btn btn-primary mt-4">See Report Files</a>
         <a href="task-list.php" class="btn btn-primary mt-4">Back</a>
     </div>

@@ -1,5 +1,7 @@
 <?php
 require_once '../admin/authentication/admin-class.php';
+require_once 'Notification.php';
+
 
 class Task
 {
@@ -36,9 +38,27 @@ class Task
     }
 
     public function getTaskStatus($taskId){
-        
+
     }
 
+
+    public function addNewTask($title, $description, $dueDate, $assignedEmployees)
+{
+    $stmt = $this->admin->runQuery("INSERT INTO tasks (title, description, due_date, status) VALUES (:title, :description, :due_date, 'pending')");
+    $stmt->execute(array(':title' => $title, ':description' => $description, ':due_date' => $dueDate));
+    $taskId = $this->admin->getLastInsertId();
+
+    foreach ($assignedEmployees as $employeeId) {
+        $assignStmt = $this->admin->runQuery("INSERT INTO task_assignments (task_id, employee_id) VALUES (:task_id, :employee_id)");
+        $assignStmt->execute(array(':task_id' => $taskId, ':employee_id' => $employeeId));
+    }
+
+    // Send notification
+    $notification = new Notification();
+    $notification->notifyNewTask($taskId);
+
+    return $taskId;
+}
     // Handle file upload for task-related documents
     public function uploadDocument($taskId, $file)
     {

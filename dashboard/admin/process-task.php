@@ -10,6 +10,9 @@ use PHPMailer\PHPMailer\Exception;
 
 require __DIR__.'/autoload copy.php';
 
+// Start the session to store notifications
+session_start();
+
 // Create a new PDO connection
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
@@ -34,14 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate inputs
     if (empty($title) || empty($description) || empty($due_date) || empty($due_time) || empty($employee_ids)) {
-        echo "<script>alert('All fields are required!'); window.location.href = 'admin-dashboard.';</script>";
+        $_SESSION['error'] = 'All fields are required!';
+        header("Location: admin-dashboard.php");
         exit;
     }
 
     // Ensure the due date and time are valid
     $current_datetime = date('Y-m-d H:i:s');
     if ($due_datetime < $current_datetime) {
-        echo "<script>alert('Due date and time cannot be in the past!'); window.location.href = 'add-task.php';</script>";
+        $_SESSION['error'] = 'Due date and time cannot be in the past!';
+        header("Location: add-task.php");
         exit;
     }
 
@@ -98,9 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Content
                     $mail->isHTML(true);
                     $mail->Subject = 'New Task Assigned: ' . $title;
-                    $mail->Body = 'You have been assigned a new task:<br><br>' .
-                                  'Task: ' . $title . '<br>' .
-                                  'Description: ' . $description . '<br>' .
+                    $mail->Body = 'You have been assigned a new task:<br><br>' . 
+                                  'Task: ' . $title . '<br>' . 
+                                  'Description: ' . $description . '<br>' . 
                                   'Due Date: ' . $due_datetime . '<br>' .
                                   'Please complete the task on time.';
 
@@ -115,14 +120,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Commit the transaction
         $pdo->commit();
 
-        // Redirect to the dashboard with a success message
-        header('Location: task-list.php?success=task_created');
+        // Set success message in session
+        $_SESSION['success'] = 'Task successfully created and assigned!';
+        header('Location: task-list.php');
         exit;
 
     } catch (PDOException $e) {
         // Roll back the transaction on error
         $pdo->rollBack();
-        echo "Error: " . $e->getMessage();
+        $_SESSION['error'] = 'Error creating task: ' . $e->getMessage();
+        header('Location: add-task.php');
+        exit;
+    }
+} elseif (isset($_GET['task_id']) && isset($_GET['action']) && $_GET['action'] === 'complete') {
+    // Mark the task as completed
+    $task_id = $_GET['task_id'];
+
+    try {
+        // Update task status to 'completed'
+        $stmt = $pdo->prepare("UPDATE tasks SET status = 'completed' WHERE id = :task_id");
+        $stmt->execute([':task_id' => $task_id]);
+
+        // Set success message in session
+        $_SESSION['success'] = 'Task completed successfully!';
+        header('Location: task-list.php');
+        exit;
+    } catch (PDOException $e) {
+        $_SESSION['error'] = 'Error completing task: ' . $e->getMessage();
+        header('Location: task-list.php');
+        exit;
     }
 } else {
     // If accessed directly, redirect to the dashboard
